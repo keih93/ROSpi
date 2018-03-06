@@ -2,6 +2,7 @@ import serial
 import time, math
 import sys, tty, termios
 import Adafruit_PCA9685
+import additional_packages.VL53L0X_rasp_python.VL53L0X as VL53L0X
 
 #Initialization at address 0x40
 pwm = Adafruit_PCA9685.PCA9685()
