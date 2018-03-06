@@ -2,7 +2,9 @@ import serial
 import time, math
 import sys, tty, termios
 import Adafruit_PCA9685
-import additional_packages.VL53L0X_rasp_python.VL53L0X as VL53L0X
+import os
+
+import VL53L0X
 
 #Initialization at address 0x40
 pwm = Adafruit_PCA9685.PCA9685()
@@ -24,6 +26,7 @@ class _Getch:
 
 
 class control:
+    global pwm
     speed_right_wheels = 0
     speedM2 = 0
 
@@ -39,22 +42,22 @@ class control:
     )
 
     def move_right_wheels_forward(self, x):
-        self.ser.write([128, 0, x, (128 + x) & 0x7F])
+        self.ser.write(bytes([128, 0, x, (128 + x) & 0x7F]))
 
     def move_right_wheels_backward(self, x):
-        self.ser.write([128, 1, x, (129 + x) & 0x7F])
+        self.ser.write(bytes([128, 1, x, (129 + x) & 0x7F]))
 
     def stop_right_wheels(self):
-        self.ser.write([128, 0, 0, 128 & 0x7F])
+        self.ser.write(bytes([128, 0, 0, 128 & 0x7F]))
 
     def move_left_wheels_backward(self, x):
-        self.ser.write([128, 4, x, (132 + x) & 0x7F])
+        self.ser.write(bytes([128, 4, x, (132 + x) & 0x7F]))
 
     def move_left_wheels_forward(self, x):
-        self.ser.write([128, 5, x, (133 + x) & 0x7F])
+        self.ser.write(bytes([128, 5, x, (133 + x) & 0x7F]))
 
     def stop_wheels_left(self):
-        self.ser.write([128, 4, 0, 132 & 0x7F])
+        self.ser.write(bytes([128, 4, 0, 132 & 0x7F]))
 
     def move_all_wheels_forward(self, x):
         self.move_right_wheels_forward(x)
@@ -175,14 +178,19 @@ class control:
 
 
 def main():
+    global pwm
     tof = VL53L0X.VL53L0X()
+    print(tof.get_distance())
+    print(os.path.dirname(os.path.abspath(__file__)))
     tof.start_ranging(VL53L0X.VL53L0X_BETTER_ACCURACY_MODE)
+    print(os.path.dirname(os.path.abspath(__file__)))
 
     c = control()
     # c.test()
     # print 'Enter commands:'
     c.up()
     c.up()
+    c.stop_all_wheels()
     # c.up()
 
     stop1 = 0
@@ -194,7 +202,7 @@ def main():
     print("Timing %d ms" % (timing / 1000))
 
     while (1):
-        pwm.setPWM(0, 0, servoMin)
+        pwm.set_pwm(0, 0, servoMin)
         time.sleep(0.5)
         distance = tof.get_distance()
         print("1: %d mm, %d cm" % (distance, (distance / 10)))
@@ -207,7 +215,7 @@ def main():
             stop1 = 0
             print("Frei_1!")
         # time.sleep(0.5)
-        pwm.setPWM(0, 0, servoMax)
+        pwm.set_pwm(0, 0, servoMax)
         time.sleep(0.5)
         distance = tof.get_distance()
         print("2: %d mm, %d cm" % (distance, (distance / 10)))
