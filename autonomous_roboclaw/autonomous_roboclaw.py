@@ -2,8 +2,7 @@ import serial
 import time, math
 import sys, tty, termios
 import Adafruit_PCA9685
-import VL53L0X
-import Adafruit_GPIO.GPIO as GPIO
+
 #Initialization at address 0x40
 pwm = Adafruit_PCA9685.PCA9685()
 
