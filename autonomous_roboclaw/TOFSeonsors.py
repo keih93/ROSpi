@@ -1,4 +1,4 @@
-import autonomous_roboclaw.VL53L0X as VL53L0X
+import VL53L0X as VL53L0X
 import Adafruit_GPIO.GPIO as GPIO
 import time
 

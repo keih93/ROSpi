@@ -1,6 +1,7 @@
 from time import sleep
+import TOFSeonsors as TOFSensors
 
-import autonomous_roboclaw.Engine as Engine
+import Engine as Engine
 import time
 import Adafruit_PCA9685
 import os
@@ -16,9 +17,9 @@ SERVO_MAX = 300  # Max pulse length out of 4096
 def stop_at_exit(engine):
     engine.stop_all_wheels()
 
-def main():
-    global pwm
 
+def main():
+    sensors = TOFSensors.TOFSensor()
     engine = Engine.Engine()
     atexit.register(stop_at_exit, engine)
     engine.move_all_whEngineeels_forward(20)
@@ -27,10 +28,14 @@ def main():
     sleep(2)
     engine.stop_all_wheels()
 
+    while (1):
+        print("Sensor left distance in mm: " + sensors.tof_left.get_distance())
+        print("Sensor right distance in mm: " + sensors.tof_right.get_distance())
+        time.sleep(1)
 
     stop1 = 0
     stop2 = 0
-
+    '''
     timing = tof.get_timing()
     if (timing < 20000):
         timing = 20000
@@ -64,6 +69,7 @@ def main():
             print("Frei_2!")
         if (stop1 == 0 and stop2 == 0):
             engine.move_all_wheels_forward(20)
+'''
 
 
 if __name__ == '__main__':
