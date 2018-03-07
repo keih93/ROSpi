@@ -4,7 +4,10 @@ import time
 
 
 class TOFSensor:
-    tof_left, tof_right, sensor_left_shutdown, sensor_right_shutdown = None
+    tof_left = None
+    tof_right = None
+    sensor_left_shutdown = 0
+    sensor_right_shutdown = 0
 
     def __init__(self):
         # GPIO for Sensor 1 shutdown pin
