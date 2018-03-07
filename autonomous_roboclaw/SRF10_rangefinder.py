@@ -141,6 +141,7 @@ class SRFBase(object):
         represents the nth echo. If no echos were returned list will be empty.
         """
         self.i2c.read_i2c_block_data(self.bus_addr, 0, len(self.rxb))
+        self.measure_range()
         # self.i2c.mem_read(self.rxb, self.bus_addr, 0)
         values = []
         # skip first 2 bytes, then unpack high and low bytes from buffer data
