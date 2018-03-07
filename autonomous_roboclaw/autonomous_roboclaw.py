@@ -1,5 +1,6 @@
 from time import sleep
 import TOFSeonsors as TOFSensors
+import autonomous_roboclaw.SRF10_rangefinder as SRF10
 
 import Engine as Engine
 import time
@@ -27,6 +28,8 @@ def main():
     engine.move_all_wheels_backward(20)
     sleep(2)
     engine.stop_all_wheels()
+
+    rf = SRF10.SRF10()
 
     while (1):
         print("Sensor left distance in mm: " + str(sensors.tof_left.get_distance()))

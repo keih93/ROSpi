@@ -32,7 +32,7 @@ class Engine:
     def move_left_wheels_forward(self, x):
         self.ser.write(bytes([128, 5, x, (133 + x) & 0x7F]))
 
-    def stop_wheels_left(self):
+    def stop_left_wheels(self):
         self.ser.write(bytes([128, 4, 0, 132 & 0x7F]))
 
     def move_all_wheels_forward(self, x):
@@ -41,7 +41,7 @@ class Engine:
 
     def stop_all_wheels(self):
         self.stop_right_wheels()
-        self.stop_wheels_left()
+        self.stop_left_wheels()
 
     def move_all_wheels_backward(self, x):
         self.move_right_wheels_backward(x)
