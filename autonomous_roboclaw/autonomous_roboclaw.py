@@ -4,7 +4,6 @@ import autonomous_roboclaw.Engine as Engine
 import time
 import Adafruit_PCA9685
 import os
-import autonomous_roboclaw.VL53L0X as VL53L0X
 import atexit
 
 # Initialization at address 0x40
@@ -19,15 +18,10 @@ def stop_at_exit(engine):
 
 def main():
     global pwm
-    tof = VL53L0X.VL53L0X()
-    print(tof.get_distance())
-    print(os.path.dirname(os.path.abspath(__file__)))
-    tof.start_ranging(VL53L0X.VL53L0X_BETTER_ACCURACY_MODE)
-    print(os.path.dirname(os.path.abspath(__file__)))
 
     engine = Engine.Engine()
     atexit.register(stop_at_exit, engine)
-    engine.move_all_wheels_forward(20)
+    engine.move_all_whEngineeels_forward(20)
     sleep(2)
     engine.move_all_wheels_backward(20)
     sleep(2)
