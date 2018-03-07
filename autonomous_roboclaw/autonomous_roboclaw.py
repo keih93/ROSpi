@@ -30,6 +30,7 @@ def main():
     engine.stop_all_wheels()
 
     rf = SRF10.SRF10()
+    print ("Bus address: " + str(rf.bus_addr))
 
     while (1):
         print("Sensor left distance in mm: " + str(sensors.tof_left.get_distance()))
