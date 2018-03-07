@@ -1,6 +1,6 @@
 from time import sleep
 import TOFSeonsors as TOFSensors
-import autonomous_roboclaw.SRF10_rangefinder as SRF10
+import SRF10_rangefinder as SRF10
 
 import Engine as Engine
 import time
