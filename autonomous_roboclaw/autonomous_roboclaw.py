@@ -29,8 +29,8 @@ def main():
     engine.stop_all_wheels()
 
     while (1):
-        print("Sensor left distance in mm: " + sensors.tof_left.get_distance())
-        print("Sensor right distance in mm: " + sensors.tof_right.get_distance())
+        print("Sensor left distance in mm: " + str(sensors.tof_left.get_distance()))
+        print("Sensor right distance in mm: " + str(sensors.tof_right.get_distance()))
         time.sleep(1)
 
     stop1 = 0
