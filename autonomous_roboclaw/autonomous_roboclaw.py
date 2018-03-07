@@ -22,7 +22,7 @@ def main():
     sensors = TOFSensors.TOFSensor()
     engine = Engine.Engine()
     atexit.register(stop_at_exit, engine)
-    engine.move_all_whEngineeels_forward(20)
+    engine.move_all_wheels_forward(20)
     sleep(2)
     engine.move_all_wheels_backward(20)
     sleep(2)
