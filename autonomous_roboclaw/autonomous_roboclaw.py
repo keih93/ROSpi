@@ -1,6 +1,6 @@
 from time import sleep
 import TOFSeonsors as TOFSensors
-import SRF10_rangefinder as SRF10
+import autonomous_roboclaw.SRF10_rangefinder as SRF10
 
 import Engine as Engine
 import time
@@ -30,6 +30,7 @@ def main():
     engine.stop_all_wheels()
 
     rf = SRF10.SRF10()
+    print ("Length of rxb: " + str(len(rf.rxb)))
     print ("Bus address : " + str(rf.bus_addr))
 
     while (1):
