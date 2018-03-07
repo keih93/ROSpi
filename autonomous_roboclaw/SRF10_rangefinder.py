@@ -107,7 +107,7 @@ class SRFBase(object):
         if range_mm > 11008:
             raise ValueError('Maximum range is 11008mm.')
         c = int(range_mm) // 43 - 1
-        self.i2c.write_i2c_block_data(self.bus_addr, 2, c)
+        self.i2c.write_byte_data(self.bus_addr, 2, c)
         # self.i2c.mem_write(c, self.bus_addr, 2)
 
     def set_analog_gain(self, gain):
@@ -118,7 +118,7 @@ class SRFBase(object):
         """
         if gain < 0:
             raise ValueError('Gain register must be greater than 0.')
-        self.i2c.write_i2c_block_data(self.bus_addr, 1, int(gain))
+        self.i2c.write_byte_data(self.bus_addr, 1, int(gain))
         # self.i2c.mem_write(int(gain), self.bus_addr, 1)
 
     def measure_range(self, units=SRF_RANGE_UNITS.CM):
@@ -127,7 +127,7 @@ class SRFBase(object):
         :param units: SRF_RANGE_UNITS, either IC, CM, or US for µ seconds.
         :return:
         """
-        self.i2c.write_i2c_block_data(self.bus_addr,0,units)
+        self.i2c.write_byte_data(self.bus_addr,0,SRF_RANGE_UNITS.CM)
         # self.i2c.mem_write(units, self.bus_addr, 0)
 
     def read_range(self):
