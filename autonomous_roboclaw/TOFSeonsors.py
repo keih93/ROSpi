@@ -1,5 +1,5 @@
 import VL53L0X as VL53L0X
-import Adafruit_GPIO.GPIO as GPIO
+import RPi.GPIO as GPIO
 import time
 
 
@@ -14,8 +14,6 @@ class TOFSensor:
         self.sensor_left_shutdown = 20
         # GPIO for Sensor 2 shutdown pin
         self.sensor_right_shutdown = 16
-
-        GPIO.setwarnings(False)
 
         # Setup GPIO for shutdown pins on each VL53L0X
         GPIO.setmode(GPIO.BCM)
