@@ -52,7 +52,7 @@ class SRFBase(object):
         """
         super(SRFBase, self).__init__()
         self.i2c = smbus2.SMBus(1)
-        self.bus_addr = 0xE0
+        self.bus_addr = 0x71
         self.rxb = bytearray(4)
 
     '''
@@ -127,7 +127,7 @@ class SRFBase(object):
         :param units: SRF_RANGE_UNITS, either IC, CM, or US for µ seconds.
         :return:
         """
-        print(str(self.bus_addr))
+
         self.i2c.write_byte_data(self.bus_addr,0,SRF_RANGE_UNITS.CM)
         # self.i2c.mem_write(units, self.bus_addr, 0)
 
