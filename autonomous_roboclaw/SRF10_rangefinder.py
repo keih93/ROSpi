@@ -24,6 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from pyb import I2C
+import smbus2
 
 
 class SRF_RANGE_UNITS:
@@ -34,6 +35,8 @@ class SRF_RANGE_UNITS:
 
 
 class SRFBase(object):
+    i2c = None
+    bus_address = None
     """
     A base class for SRF08 and SRF10 rangefinders.
     Essentially a SRF-xx rangefinder emulates a 24xx series EEPROM and implements
@@ -43,58 +46,30 @@ class SRFBase(object):
     serves as a base implementation which can be overridden to form a class
     for a specific sensor.
     """
-    def __init__(self, *args, **kwargs):
+
+    def __init__(self):
         """
         If any arguments are present self.init() is called.
         """
         super(SRFBase, self).__init__()
-        self.i2c = None
-        self.bus_addr = None
+        self.i2c = smbus2.SMBus(1)
+        self.bus_addr = 0xE0
         self.rxb = bytearray(4)
-        if len(args) > 0:
-            self.init(*args, **kwargs)
 
-    def init(self, *args, **kwargs):
-        """
-        Initialize a SRF sensor instance.
-        There are two options for parameters passed when calling this function:
-        1. Pass the initialization parameters for an pyb.I2C object.
-           The initialization parameters will be used to initialize a new I2C
-           instance which will be used to communicate with the sensor.
-           If bus_address has not been set, a bus scan will be performed and the
-           first available address will be used.
-        2. Pass an already initialized pyb.I2C object.
-           The instance passed in will be used to communicate with the sensor.
-           The I2C instance should be initialized before any methods which
-           require communication are called.
-        """
-        if len(args) < 1:
-            raise TypeError('Please supply an I2C object or bus number.')
-        if type(args[0]) is int:
-            # assume first argument is bus number for I2C constructor
-            self.i2c = I2C(*args, **kwargs)
-            if self.bus_addr is None:
-                try:
-                    # assign address of first device found
-                    self.bus_addr = self.i2c.scan()[0]
-                except TypeError:
-                    raise Exception('Sensor not found on I2C bus.')
-        else:
-            # first argument is initialized I2C bus object
-            self.i2c = args[0]
-
-    def deinit(self):
-        """
-        De-init sensor instance.
-        Calls deinit() on I2C instance associated with sensor, and also resets
-        sensor bus address.
-        """
-        try:
-            self.i2c.deinit()
-        except AttributeError:
-            pass
-        self.i2c = None
-        self.bus_addr = None
+    '''
+        def deinit(self):
+            """
+            De-init sensor instance.
+            Calls deinit() on I2C instance associated with sensor, and also resets
+            sensor bus address.
+            """
+            try:
+                self.i2c.deinit()
+            except AttributeError:
+                pass
+            self.i2c = None
+            self.bus_addr = None
+    '''
 
     def bus_address(self, *args):
         """
@@ -167,7 +142,7 @@ class SRFBase(object):
         # skip first 2 bytes, then unpack high and low bytes from buffer data
         # data is pack in big-endian form
         for i in range(2, len(self.rxb), 2):
-            range_val = (self.rxb[i] << 8) + self.rxb[i+1]
+            range_val = (self.rxb[i] << 8) + self.rxb[i + 1]
             if range_val > 0:
                 values.append(range_val)
         return values
@@ -180,6 +155,7 @@ class SRF08(SRFBase):
     Maximum analog gain of 31.
     TODO: Add ability to read light meter.
     """
+
     def __init__(self, *args, **kwargs):
         super(SRF08, self).__init__(*args, **kwargs)
         self.rxb = bytearray(36)
@@ -199,10 +175,11 @@ class SRF10(SRFBase):
     Supports single echo range value.
     Maximum analog gain of 16.
     """
+
     def __str__(self):
         return '<SRF10 address {} on {}>'.format(self.bus_addr, self.i2c)
 
     def set_analog_gain(self, gain):
         if gain > 16:
             raise ValueError('Gain register must be less than or equal to 16.')
-super(SRF10, self).set_analog_gain(gain)
+        super(SRF10, self).set_analog_gain(gain)
