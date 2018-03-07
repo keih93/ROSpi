@@ -36,7 +36,6 @@ def main():
     while (1):
         print("Sensor left distance in mm: " + str(sensors.tof_left.get_distance()))
         print("Sensor right distance in mm: " + str(sensors.tof_right.get_distance()))
-        print("Ultraschallsensor in cm: " + str(rf.measure_range()))
         print("USS read_range : " + str(rf.read_range()))
         time.sleep(2)
 
