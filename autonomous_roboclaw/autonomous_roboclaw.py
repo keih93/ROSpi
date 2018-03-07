@@ -1,18 +1,23 @@
+from time import sleep
+
 import serial
 import time
 import Adafruit_PCA9685
 import os
-import autonomous_roboclaw.VL53L0X as VL53L0X
+import VL53L0X as VL53L0X
 import atexit
 
-#Initialization at address 0x40
+# Initialization at address 0x40
 pwm = Adafruit_PCA9685.PCA9685()
 
 SERVO_MIN = 200  # Min pulse length out of 4096
 SERVO_MAX = 300  # Max pulse length out of 4096
 
+
 def stop_at_exit(c):
     c.stop_all_wheels()
+
+
 class control:
     global pwm
     speed_right_wheels = 0
@@ -59,6 +64,7 @@ class control:
         self.move_right_wheels_backward(x)
         self.move_left_wheels_backward(x)
 
+
 def main():
     global pwm
     tof = VL53L0X.VL53L0X()
@@ -69,12 +75,12 @@ def main():
 
     c = control()
     atexit.register(stop_at_exit, c)
-    # c.test()
-    # print 'Enter commands:'
-    c.up()
-    c.up()
+    c.move_all_wheels_forward(20)
+    sleep(2)
+    c.move_all_wheels_backward(20)
+    sleep(2)
     c.stop_all_wheels()
-    # c.up()
+
 
     stop1 = 0
     stop2 = 0
@@ -112,6 +118,7 @@ def main():
             print("Frei_2!")
         if (stop1 == 0 and stop2 == 0):
             c.move_all_wheels_forward(20)
+
 
 if __name__ == '__main__':
     main()
