@@ -61,7 +61,7 @@ class TOFSensors:
 
     def run(self):
         distance_right_sensor = self.tof_right.get_distance()
-        distance_left_sensor = self.tof_right.get_distance()
+        distance_left_sensor = self.tof_left.get_distance()
         print("Distance Left sensor: {} , Distance Right sensor: {}".format(str(distance_left_sensor),
                                                                             str(distance_right_sensor)))
         time.sleep(3)
