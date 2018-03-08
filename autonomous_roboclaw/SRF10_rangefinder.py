@@ -204,7 +204,8 @@ class SRF10(SRFBase):
         super(SRF10, self).set_analog_gain(gain)
 
     def run(self):
-        if self.measure_and_read() < 25:
+        measured_distance = self.measure_and_read()
+        if measured_distance < 25:
             self.srf10_state = State.BLOCKED
         else:
             self.srf10_state = State.FREE
