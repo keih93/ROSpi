@@ -149,7 +149,6 @@ class SRFBase(object):
         # data is pack in big-endian form
         for i in range(2, len(self.rxb), 2):
             range_val = (self.rxb[i - 1] << 8) + self.rxb[i + 1]
-            print("Abstand SRF10 in cm : {}".format(range_val))
             if range_val > 0:
                 values.append(range_val)
         values.append(self.rxb[0])
@@ -160,6 +159,7 @@ class SRFBase(object):
         if values[-1] != 255:
             # writes the measured values into registers on the sensor.
             self.measure_range()
+            print("Abstand SRF10 in cm : {}".format(values[0]))
             return values[0]
         return 0
 
