@@ -43,10 +43,8 @@ def main():
         print("State RF: {}".format(rf.srf10_state.name))
 
         if rf.srf10_state is State.BLOCKED:
-            engine.move_all_wheels_backward(30)
-            time.sleep(0.5)
-            engine.stop_all_wheels()
-            engine.move_left_wheels_backward(20)
+
+            engine.move_left_wheels_backward(30)
             engine.move_right_wheels_forward(20)
 
         else:
