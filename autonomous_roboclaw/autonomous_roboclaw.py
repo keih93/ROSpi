@@ -1,5 +1,5 @@
 from time import sleep
-import TOFSensors as TOFSensors
+import autonomous_roboclaw.TOFSensors as TOFSensors
 import SRF10_rangefinder as SRF10
 
 import Engine
@@ -12,8 +12,10 @@ import atexit
 SERVO_MIN = 600  # Min pulse length out of 4096
 SERVO_MAX = 1200  # Max pulse length out of 4096
 
+
 def stop_at_exit(engine):
     engine.stop_all_wheels()
+
 
 def main():
     sensors = TOFSensors.TOFSensors()
@@ -21,18 +23,17 @@ def main():
     servos = Servos.Servos()
     atexit.register(stop_at_exit, engine)
 
-    engine.move_all_wheels_forward(50)
+    engine.move_all_wheels_forward(40)
     servos.both_servos_down()
     servos.front_servo_forward()
     time.sleep(1)
-    engine.move_all_wheels_backward(50)
+    engine.move_all_wheels_backward(40)
     servos.both_servos_forward()
     time.sleep(1)
     engine.stop_all_wheels()
     servos.both_servos_down()
 
     rf = SRF10.SRF10()
-
 
     while (1):
         rf.run()
@@ -44,11 +45,15 @@ def main():
 
         if rf.srf10_state is State.BLOCKED:
 
-            engine.move_left_wheels_backward(30)
-            engine.move_right_wheels_forward(20)
+            engine.turn_around(35)
+
+        elif sensors.state_left_sensor is State.BLOCKED or sensors.state_right_sensor is State.BLOCKED:
+            engine.move_all_wheels_backward(30)
+            time.sleep(1.5)
+            engine.turn_around(35)
 
         else:
-            engine.move_all_wheels_forward(30)
+            engine.move_all_wheels_forward(40)
 
         time.sleep(0.1)
 
