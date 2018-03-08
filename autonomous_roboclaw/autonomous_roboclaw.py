@@ -1,43 +1,42 @@
-from time import sleep
 import TOFSeonsors as TOFSensors
 import SRF10_rangefinder as SRF10
 
-import Engine as Engine
+import Engine
 import time
-import Adafruit_PCA9685
 import os
 import atexit
 
-# Initialization at address 0x40
-pwm = Adafruit_PCA9685.PCA9685()
-
-SERVO_MIN = 200  # Min pulse length out of 4096
-SERVO_MAX = 300  # Max pulse length out of 4096
-
+SERVO_MIN = 600  # Min pulse length out of 4096
+SERVO_MAX = 1200  # Max pulse length out of 4096
 
 def stop_at_exit(engine):
     engine.stop_all_wheels()
-
 
 def main():
     sensors = TOFSensors.TOFSensor()
     engine = Engine.Engine()
     atexit.register(stop_at_exit, engine)
+    
     engine.move_all_wheels_forward(20)
+    pwm.set_pwm(0, 0, 800) #down: 780 up: 1090
+    pwm.set_pwm(1, 0, 800) #down: 840 up: 480
     sleep(2)
+    
     engine.move_all_wheels_backward(20)
+    pwm.set_pwm(0, 0, 1090) #down: 800 up: 1090
+    pwm.set_pwm(1, 0, 480) #down: 800 up: 480
     sleep(2)
+    
     engine.stop_all_wheels()
 
     rf = SRF10.SRF10()
     print ("Length of rxb: " + str(len(rf.rxb)))
     print ("Bus address : " + str(rf.bus_addr))
-
     while (1):
         print("Sensor left distance in mm: " + str(sensors.tof_left.get_distance()))
         print("Sensor right distance in mm: " + str(sensors.tof_right.get_distance()))
         print("USS read_range : " + str(rf.measure_and_read()))
-        time.sleep(2)
+        time.sleep(0.2)
 
     stop1 = 0
     stop2 = 0
