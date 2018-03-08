@@ -143,15 +143,13 @@ class SRFBase(object):
         """
         self.rxb = self.i2c.read_i2c_block_data(self.bus_addr, 0, 4)
         print(str(self.rxb))
-        for e in self.rxb:
-            print("rxb: " + str(e))
         # self.i2c.mem_read(self.rxb, self.bus_addr, 0)
         values = []
         # skip first 2 bytes, then unpack high and low bytes from buffer data
         # data is pack in big-endian form
         for i in range(2, len(self.rxb), 2):
             range_val = (self.rxb[i - 1] << 8) + self.rxb[i + 1]
-            print("Abstand SRF10 in cm : " + str(range_val))
+            print("Abstand SRF10 in cm : " + range_val)
             if range_val > 0:
                 values.append(range_val)
         values.append(self.rxb[0])
