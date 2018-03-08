@@ -150,7 +150,7 @@ class SRFBase(object):
         # skip first 2 bytes, then unpack high and low bytes from buffer data
         # data is pack in big-endian form
         for i in range(2, len(self.rxb), 2):
-            range_val = (self.rxb[i-1] << 8) + self.rxb[i + 1]
+            range_val = (self.rxb[i - 1] << 8) + self.rxb[i + 1]
             if range_val > 0:
                 values.append(range_val)
         values.append(self.rxb[0])
@@ -164,8 +164,6 @@ class SRFBase(object):
             self.measure_range()
             return values[0]
         return 0
-
-
 
 
 class SRF08(SRFBase):
@@ -196,6 +194,7 @@ class SRF10(SRFBase):
     Maximum analog gain of 16.
     """
     srf10_state = State.FREE
+
     def __str__(self):
         return '<SRF10 address {} on {}>'.format(self.bus_addr, self.i2c)
 
@@ -205,9 +204,7 @@ class SRF10(SRFBase):
         super(SRF10, self).set_analog_gain(gain)
 
     def run(self):
-        while True:
-            if self.measure_and_read() < 25:
-                self.srf10_state = State.BLOCKED
-
-            else:
-                self.srf10_state = State.FREE
+        if self.measure_and_read() < 25:
+            self.srf10_state = State.BLOCKED
+        else:
+            self.srf10_state = State.FREE

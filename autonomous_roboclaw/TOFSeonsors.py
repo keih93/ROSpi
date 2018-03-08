@@ -3,10 +3,12 @@ import RPi.GPIO as GPIO
 import time
 from enum import Enum
 
+
 class State(Enum):
     FREE = 0
     BLOCKED = 1
     ERROR = 2
+
 
 class TOFSensor:
     tof_right = None
@@ -58,17 +60,18 @@ class TOFSensor:
         self.sensor_left_shutdown = 16
 
     def run(self):
-        while True:
-            if self.tof_right.get_distance() < 250:
-                self.state_right_sensor = State.BLOCKED
+        distance_right_sensor = self.tof_right.get_distance()
+        distance_left_sensor = self.tof_right.get_distance()
+        if distance_right_sensor < 250:
+            self.state_right_sensor = State.BLOCKED
 
-            if self.tof_left.get_distance() < 250:
-                self.state_left_sensor = State.BLOCKED
+        if distance_left_sensor < 250:
+            self.state_left_sensor = State.BLOCKED
 
-            if self.tof_right.get_distance() >= 250:
-                self.state_right_sensor = State.FREE
+        if distance_right_sensor >= 250:
+            self.state_right_sensor = State.FREE
 
-            if self.tof_left.get_distance() >= 250:
-                self.state_left_sensor = State.FREE
+        if distance_left_sensor >= 250:
+            self.state_left_sensor = State.FREE
 
-            time.sleep(0.05)
+
