@@ -29,6 +29,22 @@ def main():
     engine.stop_all_wheels()
 
     rf = SRF10.SRF10()
+    print ("Length of rxb: " + str(len(rf.rxb)))
+    print ("Bus address : " + str(rf.bus_addr))
+
+    while (1):
+        print("Sensor left distance in mm: " + str(sensors.tof_left.get_distance()))
+        print("Sensor right distance in mm: " + str(sensors.tof_right.get_distance()))
+        print("USS read_range : " + str(rf.measure_and_read()))
+        time.sleep(2)
+
+    stop1 = 0
+    stop2 = 0
+    '''
+    timing = tof.get_timing()
+    if (timing < 20000):
+        timing = 20000
+    print("Timing %d ms" % (timing / 1000))
 
     while (1):
         rf.run()
@@ -39,6 +55,6 @@ def main():
         print("State RF: {}".format(rf.srf10_state.name))
 
         time.sleep(1)
-
+    '''
 if __name__ == '__main__':
     main()
