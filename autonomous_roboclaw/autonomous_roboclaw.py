@@ -16,16 +16,10 @@ def main():
     sensors = TOFSensors.TOFSensor()
     engine = Engine.Engine()
     atexit.register(stop_at_exit, engine)
-    
     engine.move_all_wheels_forward(20)
-    pwm.set_pwm(0, 0, 800) #down: 780 up: 1090
-    pwm.set_pwm(1, 0, 800) #down: 840 up: 480
-    sleep(2)
-    
+    time.sleep(2)
     engine.move_all_wheels_backward(20)
-    pwm.set_pwm(0, 0, 1090) #down: 800 up: 1090
-    pwm.set_pwm(1, 0, 480) #down: 800 up: 480
-    sleep(2)
+    time.sleep(2)
     
     engine.stop_all_wheels()
 
