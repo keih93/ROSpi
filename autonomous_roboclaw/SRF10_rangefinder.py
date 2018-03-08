@@ -153,11 +153,13 @@ class SRFBase(object):
             range_val = (self.rxb[i] << 8) + self.rxb[i + 1]
             if range_val > 0:
                 values.append(range_val)
-        values.append(self.rbx[0])
+        values.append(self.rxb[0])
         return values
 
     def measure_and_read(self):
         values = self.read_range()
+        for e in values:
+            print("values: " + str(e))
         if (values[len(values) - 1] != 255):
             self.measure_range()
             return values[0]
