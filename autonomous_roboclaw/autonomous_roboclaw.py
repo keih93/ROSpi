@@ -1,9 +1,10 @@
 from time import sleep
-import TOFSensors as TOFSensors
-import SRF10_rangefinder as SRF10
+import autonomous_roboclaw.TOFSensors as TOFSensors
+import autonomous_roboclaw.SRF10_rangefinder as SRF10
 
-import Engine
-import Servos
+import autonomous_roboclaw.Engine
+import autonomous_roboclaw.Servos
+from autonomous_roboclaw.TOFSensors import State
 import time
 
 import atexit
@@ -41,7 +42,13 @@ def main():
 
         print("State RF: {}".format(rf.srf10_state.name))
 
-        time.sleep(0.2)
+        if rf.srf10_state is State.BLOCKED:
+            engine.move_all_wheels_backward(30)
+            time.sleep(0.5)
+            engine.stop_all_wheels()
+            engine.move_left_wheels_backward(20)
+            engine.move_right_wheels_forward(20)
+
 
 if __name__ == '__main__':
     main()
