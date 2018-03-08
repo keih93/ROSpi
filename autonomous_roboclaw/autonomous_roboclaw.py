@@ -19,7 +19,7 @@ def stop_at_exit(engine):
 
 
 def main():
-    sensors = TOFSensors.TOFSensor()
+    sensors = TOFSensors.TOFSensors()
     engine = Engine.Engine()
     atexit.register(stop_at_exit, engine)
     engine.move_all_wheels_forward(80)
