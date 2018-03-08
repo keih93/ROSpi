@@ -1,4 +1,4 @@
-import VL53L0X as VL53L0X
+import autonomous_roboclaw.VL53L0X as VL53L0X
 import RPi.GPIO as GPIO
 import time
 from enum import Enum
@@ -64,7 +64,7 @@ class TOFSensors:
         distance_left_sensor = self.tof_right.get_distance()
         if distance_right_sensor < 250:
             self.state_right_sensor = State.BLOCKED
-
+        
         if distance_left_sensor < 250:
             self.state_left_sensor = State.BLOCKED
 

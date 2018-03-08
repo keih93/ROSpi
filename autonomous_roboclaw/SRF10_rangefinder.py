@@ -24,7 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 import smbus2
-from TOFSeonsors import State
+from autonomous_roboclaw.TOFSensors import State
 
 
 class SRF_RANGE_UNITS:
