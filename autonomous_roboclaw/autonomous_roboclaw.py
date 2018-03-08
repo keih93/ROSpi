@@ -1,8 +1,8 @@
 from time import sleep
-import autonomous_roboclaw.TOFSeonsors as TOFSensors
-import autonomous_roboclaw.SRF10_rangefinder as SRF10
+import TOFSeonsors as TOFSensors
+import SRF10_rangefinder as SRF10
 
-import autonomous_roboclaw.Engine as Engine
+import Engine as Engine
 import time
 import Adafruit_PCA9685
 import atexit
