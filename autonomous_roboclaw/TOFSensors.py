@@ -64,7 +64,6 @@ class TOFSensors:
         distance_left_sensor = self.tof_left.get_distance()
         print("Distance Left sensor: {} , Distance Right sensor: {}".format(str(distance_left_sensor),
                                                                             str(distance_right_sensor)))
-        time.sleep(3)
 
         if distance_right_sensor < 250:
             self.state_right_sensor = State.BLOCKED
