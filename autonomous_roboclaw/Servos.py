@@ -40,6 +40,6 @@ class Servos:
         self.set_servo(self.LEFT_SERVO, self.LEFT_FORWARD)
         self.set_servo(self.RIGHT_SERVO, self.RIGHT_FORWARD)
     
-    def font_servo_forward(self):
+    def front_servo_forward(self):
         self.set_servo(self.FRONT_SERVO, self.FRONT_FORWARD)
     
