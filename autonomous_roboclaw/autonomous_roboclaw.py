@@ -50,6 +50,8 @@ def main():
         else:
             engine.move_all_wheels_forward(30)
 
+        time.sleep(0.1)
+
 
 if __name__ == '__main__':
     main()

@@ -11,7 +11,7 @@ class Servos:
     LEFT_FORWARD = 480
     RIGHT_DOWN = 780
     RIGHT_FORWARD = 1090
-    FRONT_FORWARD = 700
+    FRONT_FORWARD = 1350
     
     def __init__(self):
         # Initialization at address 0x40
