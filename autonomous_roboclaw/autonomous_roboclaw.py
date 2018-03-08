@@ -49,6 +49,9 @@ def main():
             engine.move_left_wheels_backward(20)
             engine.move_right_wheels_forward(20)
 
+        else:
+            engine.move_all_wheels_forward(30)
+
 
 if __name__ == '__main__':
     main()
