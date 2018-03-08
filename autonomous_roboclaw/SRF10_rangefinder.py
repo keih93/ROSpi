@@ -141,7 +141,7 @@ class SRFBase(object):
         represents the nth echo. If no echos were returned list will be empty.
         """
         #len(self.rxb)
-        self.rxb = self.i2c.read_i2c_block_data(self.bus_addr, 2, 2)
+        self.rxb = self.i2c.read_i2c_block_data(self.bus_addr, 0, 4)
 
         for e in self.rxb:
             print("rxb: " + str(e))
