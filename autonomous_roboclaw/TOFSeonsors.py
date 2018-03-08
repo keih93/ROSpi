@@ -1,13 +1,19 @@
-import VL53L0X as VL53L0X
+import autonomous_roboclaw.VL53L0X as VL53L0X
 import RPi.GPIO as GPIO
 import time
+from enum import Enum
 
+class State(Enum):
+    FREE = 0
+    BLOCKED = 1
+    ERROR = 2
 
 class TOFSensor:
     tof_right = None
-    tof_left= None
+    tof_left = None
     sensor_right_shutdown = 0
     sensor_left_shutdown = 0
+    state_left_sensor, state_right_sensor = State.FREE
 
     def __init__(self):
         # GPIO for Sensor 1 shutdown pin
@@ -49,3 +55,19 @@ class TOFSensor:
         self.sensor_right_shutdown = 20
         # GPIO for Sensor 2 shutdown pin
         self.sensor_left_shutdown = 16
+
+    def run(self):
+        while True:
+            if self.tof_right.get_distance() < 250:
+                self.state_right_sensor = State.BLOCKED
+
+            if self.tof_left.get_distance() < 250:
+                self.state_left_sensor = State.BLOCKED
+
+            if self.tof_right.get_distance() >= 250:
+                self.state_right_sensor = State.FREE
+
+            if self.tof_left.get_distance() >= 250:
+                self.state_left_sensor = State.FREE
+
+            time.sleep(0.05)

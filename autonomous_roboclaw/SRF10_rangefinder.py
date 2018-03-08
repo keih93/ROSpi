@@ -24,6 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 import smbus2
+from autonomous_roboclaw.TOFSeonsors import State
 
 
 class SRF_RANGE_UNITS:
@@ -194,7 +195,7 @@ class SRF10(SRFBase):
     Supports single echo range value.
     Maximum analog gain of 16.
     """
-
+    srf10_state = State.FREE
     def __str__(self):
         return '<SRF10 address {} on {}>'.format(self.bus_addr, self.i2c)
 
@@ -202,3 +203,11 @@ class SRF10(SRFBase):
         if gain > 16:
             raise ValueError('Gain register must be less than or equal to 16.')
         super(SRF10, self).set_analog_gain(gain)
+
+    def run(self):
+        while True:
+            if self.measure_and_read() < 25:
+                self.srf10_state = State.BLOCKED
+
+            else:
+                self.srf10_state = State.FREE
