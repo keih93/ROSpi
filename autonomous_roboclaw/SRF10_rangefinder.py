@@ -158,7 +158,6 @@ class SRFBase(object):
         return values
 
     def measure_and_read(self):
-
         values = self.read_range()
         if values[-1] != 255:
             # writes the measured values into registers on the sensor.
