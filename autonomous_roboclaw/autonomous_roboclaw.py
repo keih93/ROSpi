@@ -37,12 +37,10 @@ def main():
         sensors.run()
         print("State TOF Right: {}   State TOF Left: {} ".format(sensors.state_right_sensor.name,
                                                                  sensors.state_left_sensor.name))
-        print("State RF: {}".format(rf.srf10_state.name))
-        print("Sensor left distance in mm: " + str(sensors.tof_left.get_distance()))
-        print("Sensor right distance in mm: " + str(sensors.tof_right.get_distance()))
-        print("USS read_range : " + str(rf.measure_and_read()))
-        time.sleep(1)
 
+        print("State RF: {}".format(rf.srf10_state.name))
+
+time.sleep(1)
 
 if __name__ == '__main__':
     main()
