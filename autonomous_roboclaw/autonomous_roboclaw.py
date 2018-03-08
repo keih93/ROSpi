@@ -1,5 +1,5 @@
 from time import sleep
-import autonomous_roboclaw.TOFSensors as TOFSensors
+import TOFSensors
 import SRF10_rangefinder as SRF10
 
 import Engine
@@ -47,10 +47,15 @@ def main():
 
             engine.turn_around(35)
 
-        elif sensors.state_left_sensor is State.BLOCKED or sensors.state_right_sensor is State.BLOCKED:
+        elif sensors.state_left_sensor is State.BLOCKED:
             engine.move_all_wheels_backward(30)
             time.sleep(1.5)
-            engine.turn_around(35)
+            engine.turn_around_right()
+
+        elif sensors.state_right_sensor is State.BLOCKED:
+            engine.move_all_wheels_backward(30)
+            time.sleep(1.5)
+            engine.turn_around_left()
 
         else:
             engine.move_all_wheels_forward(40)

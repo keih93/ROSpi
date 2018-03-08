@@ -65,14 +65,14 @@ class TOFSensors:
         print("Distance Left sensor: {} , Distance Right sensor: {}".format(str(distance_left_sensor),
                                                                             str(distance_right_sensor)))
 
-        if distance_right_sensor < 250:
+        if distance_right_sensor < 180 or distance_right_sensor > 300:
             self.state_right_sensor = State.BLOCKED
 
-        if distance_left_sensor < 250:
-            self.state_left_sensor = State.BLOCKED
-
-        if distance_right_sensor >= 250:
+        else:
             self.state_right_sensor = State.FREE
 
-        if distance_left_sensor >= 250:
+        if distance_left_sensor < 180 or distance_left_sensor > 300:
+            self.state_left_sensor = State.BLOCKED
+
+        else:
             self.state_left_sensor = State.FREE

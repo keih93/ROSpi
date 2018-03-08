@@ -47,9 +47,12 @@ class Engine:
         self.move_right_wheels_backward(speed)
         self.move_left_wheels_backward(speed)
 
-    def turn_around(self, speed = 35):
+    def turn_around_left(self, speed=35):
         self.move_right_wheels_forward(speed)
         self.move_left_wheels_backward(speed)
         time.sleep(2)
 
-
+    def turn_around_right(self, speed=35):
+        self.move_right_wheels_backward(speed)
+        self.move_left_wheels_forward(speed)
+        time.sleep(2)
