@@ -1,6 +1,6 @@
 from time import sleep
 import TOFSensors
-import SRF10_rangefinder as SRF10
+import autonomous_roboclaw.SRF10_rangefinder as SRF10
 
 import Engine
 import Servos
@@ -34,7 +34,11 @@ def main():
     servos.both_servos_down()
 
     rf = SRF10.SRF10()
-
+    #TODO Geschwindigkeit auf 50 anpassen
+    #TODO Messwerte mitteln
+    #TODO Drehung
+    #TODO Code etwas kommentieren
+    #TODO evtl. setup.py einfügen
     while (1):
         rf.run()
         sensors.run()
@@ -51,11 +55,13 @@ def main():
             engine.move_all_wheels_backward(30)
             time.sleep(1.5)
             engine.turn_around_right()
+            time.sleep(1.5)
 
         elif sensors.state_right_sensor is State.BLOCKED:
             engine.move_all_wheels_backward(30)
             time.sleep(1.5)
             engine.turn_around_left()
+            time.sleep(1.5)
 
         else:
             engine.move_all_wheels_forward(40)
