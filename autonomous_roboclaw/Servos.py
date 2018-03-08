@@ -17,21 +17,29 @@ class Servos:
         # Initialization at address 0x40
         self.pwm = Adafruit_PCA9685.PCA9685()
     
-    def set_servo(servo, value):
+    def set_servo(self, servo, value):
         self.pwm.set_pwm(servo, 0, value)
     
-    def left_servo_down():
-        self.set_servo(LEFT_SERVO, LEFT_DOWN)
+    def left_servo_down(self):
+        self.set_servo(self.LEFT_SERVO, self.LEFT_DOWN)
     
-    def right_servo_down():
-        self.set_servo(RIGHT_SERVO, RIGHT_DOWN)
+    def right_servo_down(self):
+        self.set_servo(self.RIGHT_SERVO, self.RIGHT_DOWN)
     
-    def left_servo_forward():
-        self.set_servo(LEFT_SERVO, LEFT_FORWARD)
+    def both_servos_down(self):
+        self.set_servo(self.LEFT_SERVO, self.LEFT_DOWN)
+        self.set_servo(self.RIGHT_SERVO, self.RIGHT_DOWN)
     
-    def right_servo_forward():
-        self.set_servo(RIGHT_SERVO, RIGHT_FORWARD)
+    def left_servo_forward(self):
+        self.set_servo(self.LEFT_SERVO, self.LEFT_FORWARD)
     
-    def font_servo_forward():
-        self.set_servo(FRONT_SERVO, FRONT_FORWARD)
+    def right_servo_forward(self):
+        self.set_servo(self.RIGHT_SERVO, self.RIGHT_FORWARD)
+    
+    def both_servos_forward(self):
+        self.set_servo(self.LEFT_SERVO, self.LEFT_FORWARD)
+        self.set_servo(self.RIGHT_SERVO, self.RIGHT_FORWARD)
+    
+    def font_servo_forward(self):
+        self.set_servo(self.FRONT_SERVO, self.FRONT_FORWARD)
     

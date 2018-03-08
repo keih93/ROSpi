@@ -2,6 +2,7 @@ import TOFSeonsors as TOFSensors
 import SRF10_rangefinder as SRF10
 
 import Engine
+import Servos
 import time
 import os
 import atexit
@@ -15,13 +16,16 @@ def stop_at_exit(engine):
 def main():
     sensors = TOFSensors.TOFSensor()
     engine = Engine.Engine()
+    servos = Servos.Servos()
     atexit.register(stop_at_exit, engine)
     engine.move_all_wheels_forward(20)
+    servos.both_servos_down()
     time.sleep(2)
     engine.move_all_wheels_backward(20)
+    servos.both_servos_forward()
     time.sleep(2)
-    
     engine.stop_all_wheels()
+    servos.both_servos_down()
 
     rf = SRF10.SRF10()
     print ("Length of rxb: " + str(len(rf.rxb)))
