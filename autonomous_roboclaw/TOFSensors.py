@@ -64,14 +64,13 @@ class TOFSensors:
         distance_left_sensor = self.tof_right.get_distance()
         if distance_right_sensor < 250:
             self.state_right_sensor = State.BLOCKED
-        
-        if distance_left_sensor < 250:
-            self.state_left_sensor = State.BLOCKED
-
-        if distance_right_sensor >= 250:
+        else:
             self.state_right_sensor = State.FREE
 
-        if distance_left_sensor >= 250:
+        if distance_left_sensor < 250:
+            self.state_left_sensor = State.BLOCKED
+        else:
             self.state_left_sensor = State.FREE
+
 
 
