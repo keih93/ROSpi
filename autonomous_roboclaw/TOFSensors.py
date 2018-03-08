@@ -1,4 +1,4 @@
-import autonomous_roboclaw.VL53L0X as VL53L0X
+import VL53L0X as VL53L0X
 import RPi.GPIO as GPIO
 import time
 from enum import Enum
