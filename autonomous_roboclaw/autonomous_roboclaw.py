@@ -20,6 +20,7 @@ def main():
     atexit.register(stop_at_exit, engine)
     engine.move_all_wheels_forward(20)
     servos.both_servos_down()
+    font_servo_forward()
     time.sleep(2)
     engine.move_all_wheels_backward(20)
     servos.both_servos_forward()
