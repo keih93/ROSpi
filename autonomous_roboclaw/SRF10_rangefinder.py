@@ -140,9 +140,8 @@ class SRFBase(object):
         the first item in the list represents the first echo and the nth item
         represents the nth echo. If no echos were returned list will be empty.
         """
-        #len(self.rxb)
         self.rxb = self.i2c.read_i2c_block_data(self.bus_addr, 0, 4)
-
+        print(str(self.rxb))
         for e in self.rxb:
             print("rxb: " + str(e))
         # self.i2c.mem_read(self.rxb, self.bus_addr, 0)
@@ -158,13 +157,11 @@ class SRFBase(object):
 
     def measure_and_read(self):
         values = self.read_range()
-        for e in values:
-            print("values: " + str(e))
-        if (values[len(values) - 1] != 255):
+        if values[-1] != 255:
+            # writes the measured values into registers on the sensor.
             self.measure_range()
             return values[0]
-        else:
-            return 0
+        return 0
 
 
 
