@@ -13,7 +13,8 @@ class TOFSensor:
     tof_left = None
     sensor_right_shutdown = 0
     sensor_left_shutdown = 0
-    state_left_sensor, state_right_sensor = State.FREE
+    state_left_sensor = State.FREE
+    state_right_sensor = State.FREE
 
     def __init__(self):
         # GPIO for Sensor 1 shutdown pin
