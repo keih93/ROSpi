@@ -149,13 +149,14 @@ class SRFBase(object):
         # skip first 2 bytes, then unpack high and low bytes from buffer data
         # data is pack in big-endian form
         for i in range(2, len(self.rxb), 2):
-            range_val = (self.rxb[i] << 8) + self.rxb[i + 1]
+            range_val = (self.rxb[i-1] << 8) + self.rxb[i + 1]
             if range_val > 0:
                 values.append(range_val)
         values.append(self.rxb[0])
         return values
 
     def measure_and_read(self):
+
         values = self.read_range()
         if values[-1] != 255:
             # writes the measured values into registers on the sensor.
