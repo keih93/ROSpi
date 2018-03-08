@@ -45,7 +45,7 @@ def main():
 
         if rf.srf10_state is State.BLOCKED:
 
-            engine.turn_around(35)
+            engine.turn_around_left()
 
         elif sensors.state_left_sensor is State.BLOCKED:
             engine.move_all_wheels_backward(30)
