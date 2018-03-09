@@ -22,6 +22,11 @@ def stop_at_exit(engine):
 
 
 def main():
+    """
+    Main method of the project. Starts with an init procedure and calls the functions of the used sensors in an
+    infinite loop. Waits a short time after one loop step.
+    :return:
+    """
     sensors = TOFSensors.TOFSensors()
     engine = Engine.Engine()
     servos = Servos.Servos()
@@ -39,8 +44,6 @@ def main():
 
     rf = SRF02.SRF02()
 
-    #TODO Messwerte mitteln
-    #TODO Code etwas kommentieren
     #TODO evtl. setup.py einfügen
     #TODO Screenshot von der Projektstruktur
     while (1):

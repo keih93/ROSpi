@@ -1,28 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-A utility library for interfacing with the SRF-08 and SRF-10 ultrasonic
-rangefinders.
-http://www.robot-electronics.co.uk/htm/srf08tech.shtml
-http://www.robot-electronics.co.uk/htm/srf10tech.htm
-Utilizes I2C library for reads and writes.
-The MIT License (MIT)
-Copyright (c) 2015 Martin Clemons
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-"""
 import smbus2
 from TOFSensors import State
 
@@ -57,20 +32,6 @@ class SRFBase(object):
         self.bus_addr = 0x71
         self.rxb = bytearray(4)
 
-    '''
-        def deinit(self):
-            """
-            De-init sensor instance.
-            Calls deinit() on I2C instance associated with sensor, and also resets
-            sensor bus address.
-            """
-            try:
-                self.i2c.deinit()
-            except AttributeError:
-                pass
-            self.i2c = None
-            self.bus_addr = None
-    '''
 
     def bus_address(self, *args):
         """
@@ -123,7 +84,7 @@ class SRFBase(object):
         self.i2c.write_byte_data(self.bus_addr, 1, int(gain))
         # self.i2c.mem_write(int(gain), self.bus_addr, 1)
 
-    def measure_range(self, units=SRF_RANGE_UNITS.CM):
+    def measure_range(self):
         """
         Initiate rangefinder ranging.
         :param units: SRF_RANGE_UNITS, either IC, CM, or US for µ seconds.
