@@ -1,4 +1,3 @@
-from time import sleep
 import TOFSensors
 import SRF02_rangefinder as SRF02
 
