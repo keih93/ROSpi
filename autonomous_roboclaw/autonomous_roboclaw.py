@@ -1,6 +1,6 @@
 from time import sleep
 import TOFSensors
-import autonomous_roboclaw.SRF10_rangefinder as SRF10
+import autonomous_roboclaw.SRF02_rangefinder as SRF02
 
 import Engine
 import Servos
@@ -14,6 +14,11 @@ SERVO_MAX = 1200  # Max pulse length out of 4096
 
 
 def stop_at_exit(engine):
+    """
+    Stops all wheels when exiting program.
+    :param engine:
+    :return:
+    """
     engine.stop_all_wheels()
 
 
@@ -33,21 +38,21 @@ def main():
     engine.stop_all_wheels()
     servos.both_servos_down()
 
-    rf = SRF10.SRF10()
-    #TODO Geschwindigkeit auf 50 anpassen
+    rf = SRF02.SRF02()
+
     #TODO Messwerte mitteln
-    #TODO Drehung
     #TODO Code etwas kommentieren
     #TODO evtl. setup.py einfügen
+    #TODO Screenshot von der Projektstruktur
     while (1):
         rf.run()
         sensors.run()
         print("State TOF Right: {}   State TOF Left: {} ".format(sensors.state_right_sensor.name,
                                                                  sensors.state_left_sensor.name))
 
-        print("State RF: {}".format(rf.srf10_state.name))
+        print("State RF: {}".format(rf.srf02_state.name))
 
-        if rf.srf10_state is State.BLOCKED:
+        if rf.srf02_state is State.BLOCKED:
 
             engine.turn_around_left()
 

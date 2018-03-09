@@ -37,6 +37,7 @@ class SRF_RANGE_UNITS:
 class SRFBase(object):
     i2c = None
     bus_address = None
+    old_value = 20
     """
     A base class for SRF08 and SRF10 rangefinders.
     Essentially a SRF-xx rangefinder emulates a 24xx series EEPROM and implements
@@ -155,13 +156,16 @@ class SRFBase(object):
         return values
 
     def measure_and_read(self):
-        values = self.read_range()
+        values = self.read_range
         if values[-1] != 255:
             # writes the measured values into registers on the sensor.
+            new_value = values[0]
             self.measure_range()
             print("Abstand SRF10 in cm : {}".format(values[0]))
-            return values[0]
-        return 0
+            result =(new_value + self.old_value) / 2
+            self.old_value = new_value
+            return result
+        return self.old_value
 
 
 class SRF08(SRFBase):
@@ -185,13 +189,13 @@ class SRF08(SRFBase):
         super(SRF08, self).set_analog_gain(gain)
 
 
-class SRF10(SRFBase):
+class SRF02(SRFBase):
     """
     A SRF10 rangefinder.
     Supports single echo range value.
     Maximum analog gain of 16.
     """
-    srf10_state = State.FREE
+    srf02_state = State.FREE
 
     def __str__(self):
         return '<SRF10 address {} on {}>'.format(self.bus_addr, self.i2c)
@@ -199,11 +203,16 @@ class SRF10(SRFBase):
     def set_analog_gain(self, gain):
         if gain > 16:
             raise ValueError('Gain register must be less than or equal to 16.')
-        super(SRF10, self).set_analog_gain(gain)
+        super(SRF02, self).set_analog_gain(gain)
 
     def run(self):
+        """
+        Starts measuring the distance and sets the state of the sensor according to the distance measured.
+        The sensor is blocked if the distance is less than 25 cm and free if the distance is more than 25 cm.
+        :return:
+        """
         measured_distance = self.measure_and_read()
         if measured_distance < 25:
-            self.srf10_state = State.BLOCKED
+            self.srf02_state = State.BLOCKED
         else:
-            self.srf10_state = State.FREE
+            self.srf02_state = State.FREE

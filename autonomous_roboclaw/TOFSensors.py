@@ -60,6 +60,14 @@ class TOFSensors:
         self.sensor_left_shutdown = 16
 
     def run(self):
+        """
+        Starts measuring the distance of the left and right sensor.
+        Sets the state of the two sensors according to the distance measured.
+        A sensor is blocked if the distance is less than 18 cm and more than 30 cm.
+        A sensor is free if the distance is in between 18 and 30 cm.
+        :return:
+        """
+
         distance_right_sensor = self.tof_right.get_distance()
         distance_left_sensor = self.tof_left.get_distance()
         print("Distance Left sensor: {} , Distance Right sensor: {}".format(str(distance_left_sensor),
