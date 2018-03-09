@@ -1,6 +1,6 @@
 from time import sleep
 import TOFSensors
-import autonomous_roboclaw.SRF02_rangefinder as SRF02
+import SRF02_rangefinder as SRF02
 
 import Engine
 import Servos
