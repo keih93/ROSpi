@@ -8,9 +8,6 @@ import time
 
 import atexit
 
-SERVO_MIN = 600  # Min pulse length out of 4096
-SERVO_MAX = 1200  # Max pulse length out of 4096
-
 
 def stop_at_exit(engine):
     """
@@ -27,11 +24,15 @@ def main():
     infinite loop. Waits a short time after one loop step.
     :return:
     """
+    # Create objects for each used sensor or actuator
     sensors = TOFSensors.TOFSensors()
     engine = Engine.Engine()
     servos = Servos.Servos()
+    rf = SRF02.SRF02()
+
     atexit.register(stop_at_exit, engine)
 
+    # Short init phase where wheels are rotating backwards and forwards and servos moving up and down.
     engine.move_all_wheels_forward(40)
     servos.both_servos_down()
     servos.front_servo_forward()
@@ -42,10 +43,7 @@ def main():
     engine.stop_all_wheels()
     servos.both_servos_down()
 
-    rf = SRF02.SRF02()
 
-    #TODO evtl. setup.py einfügen
-    #TODO Screenshot von der Projektstruktur
     while (1):
         rf.run()
         sensors.run()
