@@ -20,11 +20,19 @@ def stop_at_exit(engine):
 
 
 def main():
+    """
+    Main method of the project. Starts with an init procedure and calls the functions of the used sensors in an
+    infinite loop. Waits a short time after one loop step.
+    :return:
+    """
+    # Create objects for each used sensor or actuator
     sensors = TOFSensors.TOFSensors()
     camera = camera_module.CameraModule()
     engine = Engine.Engine()
     engine.stop_all_wheels()
     atexit.register(stop_at_exit, engine)
+    
+    # Short init phase where wheels are rotating backwards and forwards and servos moving up and down.
     engine.move_all_wheels_forward(40)
    
     time.sleep(1)
@@ -37,8 +45,7 @@ def main():
     #TODO Code etwas kommentieren
     #TODO evtl. setup.py einfuegen
     #TODO Screenshot von der Projektstruktur
-    
-    
+
     while (1):
         sensors.run()
         command = camera.getDirection()
