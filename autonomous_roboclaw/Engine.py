@@ -9,7 +9,7 @@ class Engine:
         pass
 
     ser = serial.Serial(
-        port='/dev/ttyUSB0',
+        port='/dev/ttyS0',
         baudrate=19200,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
@@ -23,7 +23,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.ser.write(bytes([128, 0, speed, (128 + speed) & 0x7F]))
+        self.ser.write(bytes([128, 0, speed, ((128 + speed) & 0x7F)]))
 
     def move_right_wheels_backward(self, speed=50):
         """
@@ -32,14 +32,14 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.ser.write(bytes([128, 1, speed, (129 + speed) & 0x7F]))
+        self.ser.write(bytes([128, 1, speed, ((129 + speed) & 0x7F)]))
 
     def stop_right_wheels(self):
         """
         Stop the right wheels by setting speed to 0
         :return:
         """
-        self.ser.write(bytes([128, 0, 0, 128 & 0x7F]))
+        self.ser.write(bytes([128, 0, 0, (128 & 0x7F)]))
 
     def move_left_wheels_backward(self, speed=50):
         """
@@ -48,7 +48,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.ser.write(bytes([128, 4, speed, (132 + speed) & 0x7F]))
+        self.ser.write(bytes([128, 4, speed, ((132 + speed) & 0x7F)]))
 
     def move_left_wheels_forward(self, speed=50):
         """
@@ -57,7 +57,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.ser.write(bytes([128, 5, speed, (133 + speed) & 0x7F]))
+        self.ser.write(bytes([128, 5, speed, ((133 + speed) & 0x7F)]))
 
 
     def stop_left_wheels(self):
@@ -66,7 +66,7 @@ class Engine:
         :return:
 
         """
-        self.ser.write(bytes([128, 4, 0, 132 & 0x7F]))
+        self.ser.write(bytes([128, 4, 0, (132 & 0x7F)]))
 
     def move_all_wheels_forward(self, speed=50):
         """

@@ -1,15 +1,13 @@
+# -*- coding: utf-8 -*-
 import TOFSensors
-import SRF02_rangefinder as SRF02
 
 import Engine
-import Servos
+import camera_module
+from camera_module import Direction
 from TOFSensors import State
 import time
 
 import atexit
-
-SERVO_MIN = 600  # Min pulse length out of 4096
-SERVO_MAX = 1200  # Max pulse length out of 4096
 
 
 def stop_at_exit(engine):
@@ -23,54 +21,78 @@ def stop_at_exit(engine):
 
 def main():
     sensors = TOFSensors.TOFSensors()
+    camera = camera_module.CameraModule()
     engine = Engine.Engine()
-    servos = Servos.Servos()
+    engine.stop_all_wheels()
     atexit.register(stop_at_exit, engine)
-
     engine.move_all_wheels_forward(40)
-    servos.both_servos_down()
-    servos.front_servo_forward()
+   
     time.sleep(1)
     engine.move_all_wheels_backward(40)
-    servos.both_servos_forward()
     time.sleep(1)
     engine.stop_all_wheels()
-    servos.both_servos_down()
-
-    rf = SRF02.SRF02()
+    
 
     #TODO Messwerte mitteln
     #TODO Code etwas kommentieren
-    #TODO evtl. setup.py einfügen
+    #TODO evtl. setup.py einfuegen
     #TODO Screenshot von der Projektstruktur
+    
+    
     while (1):
-        rf.run()
         sensors.run()
-        print("State TOF Right: {}   State TOF Left: {} ".format(sensors.state_right_sensor.name,
-                                                                 sensors.state_left_sensor.name))
-
-        print("State RF: {}".format(rf.srf02_state.name))
-
-        if rf.srf02_state is State.BLOCKED:
-
-            engine.turn_around_left()
-
-        elif sensors.state_left_sensor is State.BLOCKED:
+        command = camera.getDirection()
+        #print("State TOF Right: {}   State TOF Left: {} ".format(sensors.state_f_right_sensor.name, sensors.state_f_left_sensor.name)
+       
+        if sensors.state_f_left_sensor is State.BLOCKED:
+            print ("back")
             engine.move_all_wheels_backward(30)
-            time.sleep(1.5)
+            time.sleep(1.0)
             engine.turn_around_right()
-            time.sleep(1.5)
+            time.sleep(1.0)
 
-        elif sensors.state_right_sensor is State.BLOCKED:
+        elif sensors.state_f_right_sensor is State.BLOCKED:
+            print ("BACK")
             engine.move_all_wheels_backward(30)
-            time.sleep(1.5)
+            time.sleep(1.0)
             engine.turn_around_left()
-            time.sleep(1.5)
-
+            time.sleep(1.0)
+        
+        if(command == Direction.LEFT and sensors.state_h1_sensor is State.FREE and sensors.state_h2_sensor is State.FREE):
+            engine.turn_around_left()
+            time.sleep(0.2)
+            engine.stop_all_wheels()
+        
+        elif(command == Direction.RIGHT and sensors.state_h4_sensor is State.FREE and sensors.state_h5_sensor is State.FREE):
+            engine.turn_around_right()
+            time.sleep(0.2)
+            engine.stop_all_wheels()
+        
+        elif(command == Direction.FORWARD and sensors.state_h3_sensor == State.FREE):
+            engine.move_all_wheels_forward()
+            time.sleep(0.3)
+            engine.stop_all_wheels()
+            
+        elif(command == Direction.STOP):
+            engine.stop_all_wheels()
+            time.sleep(1.0)
+            engine.turn_around_right()
+            time.sleep(0.8)
+            engine.stop_all_wheels()
         else:
-            engine.move_all_wheels_forward(40)
+            engine.stop_all_wheels()
+            time.sleep(1.0)
+            engine.turn_around_right()
+            time.sleep(2.0)
+            engine.move_all_wheels_forward()
+            time.sleep(2.0)
+            engine.turn_around_left()
+            time.sleep(2.0)
+            engine.stop_all_wheels()
+       
+            
 
-        time.sleep(0.1)
+        
 
 
 if __name__ == '__main__':
