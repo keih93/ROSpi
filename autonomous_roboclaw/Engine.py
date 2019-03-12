@@ -10,7 +10,7 @@ class Engine:
 
     ser = serial.Serial(
         port='/dev/ttyS0',
-        baudrate=19200,
+        baudrate=2400,  # 19200,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
         bytesize=serial.EIGHTBITS
