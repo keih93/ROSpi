@@ -45,6 +45,7 @@ class CameraModule:
     camera = None
     rawCapture = None
     image = None
+    drawHelpLines = True
     limit_left = 0.375
     limit_right = 1 - limit_left
     limit_bottom = 0.375
@@ -56,13 +57,14 @@ class CameraModule:
     
     resolution = (640, 480)
     
+    
     def __init__(self):
         self.camera = PiCamera()
-        self.camera.resolution = (640, 480)#CameraModule.resolution
+        self.camera.resolution = CameraModule.resolution
         self.camera.framerate = 32
         self.camera.rotation = 180
         self.image = None
-        self.rawCapture = PiRGBArray(self.camera, size=(640, 480))
+        self.rawCapture = PiRGBArray(self.camera, size=CameraModule.resolution)
         self.setTarget(CameraModule.obj_yellow_ball)
         time.sleep(0.1)
         
@@ -85,6 +87,17 @@ class CameraModule:
             cv2.putText(self.image,"("+str(center[0])+","+str(center[1])+")",
                         (center[0]+10,center[1]+15),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 255), 1)
+            lineThickness = 1
+            if self.drawHelpLines:
+                y1Coor = (int)(CameraModule.resolution[1] * self.limit_top)
+                y2Coor = (int)(CameraModule.resolution[1] * self.limit_bottom)
+                x1Coor = (int)(CameraModule.resolution[0] * self.limit_left)
+                x2Coor = (int)(CameraModule.resolution[0] * self.limit_right)
+                
+                cv2.line(self.image, (0,y1Coor), (640,y1Coor), (0,255,255), lineThickness)
+                cv2.line(self.image, (0,y2Coor), (640,y2Coor), (0,255,255), lineThickness)
+                cv2.line(self.image, (x1Coor,0), (x1Coor,480), (0,255,255), lineThickness)
+                cv2.line(self.image, (x2Coor,0), (x2Coor,480), (0,255,255), lineThickness)
         
     def _find_object(self):
         """
@@ -125,6 +138,7 @@ class CameraModule:
         if self.showImg:
             print("Showing image")
             cv2.imshow("Original", self.image)
+            cv2.waitKey(1)
         return result
     
     

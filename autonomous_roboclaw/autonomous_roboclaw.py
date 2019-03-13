@@ -49,9 +49,12 @@ def main(testtime=0.0):
     
     servos = Servos()
     camera = camera_module.CameraModule()
+    
+    while True:
+        checkSectorOfObject(camera)
         
     if testtime > 0.0:
-        checkSectorOfObject(camera)
+        
             
         
         print("-"*60)
