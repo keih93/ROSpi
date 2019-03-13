@@ -19,7 +19,7 @@ rawCapture = PiRGBArray(camera, size=(640, 480))
 
 time.sleep(0.1)
 
-def callback(value):
+def noop(*args, **kwargs):
     pass
 
 
@@ -30,7 +30,7 @@ def setup_trackbars(range_filter):
         v = 0 if i == "MIN" else 255
 
         for j in range_filter:
-            cv2.createTrackbar("%s_%s" % (j, i), "Trackbars", v, 255, callback)
+            cv2.createTrackbar("%s_%s" % (j, i), "Trackbars", v, 255, noop)
 
 
 def get_arguments():

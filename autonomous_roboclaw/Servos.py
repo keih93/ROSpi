@@ -1,48 +1,147 @@
+import math
+
 import Adafruit_PCA9685
+
+
+# global static
+pwm = Adafruit_PCA9685.PCA9685()
+pwm.set_pwm_freq(50)
+
+
+class Servo(object):
+    """
+    Struct class holding information about each servo and some helper methods.
+    """
+    def __init__(self, pin, min_val, max_val, min_deg, max_deg, val=None, name=None):
+        self.pin = pin
+        self.min_val = min_val
+        self.max_val = max_val
+        self.min_deg = min_deg
+        self.max_deg = max_deg
+        self.name = name if name is not None else "Servo_" + str(self.pin)
+        
+        # the initially set value, default to middle
+        self.val = val if val is not None else (self.min_val + self.max_val) / 2
+        self.initial_val = self.val  # for reset
+    
+    def setval(self, val):
+        """
+        Set the current servo value clamped between its min and max.
+        """
+        self.val = max(min(val, self.max_val), self.min_val)
+        
+        # apply val to hardware
+        pwm.set_pwm(self.pin, 0, self.val)
+        
+        return self.val
+    
+    def val2degree(self):
+        """
+        Get the current servo value in degree.
+        """
+        #print(self.val)
+        val_rel = (float(self.val - self.min_val) / (self.max_val - self.min_val))
+        #print(val_rel)
+        deg_span = (self.max_deg - self.min_deg)
+        #print(deg_span)
+        deg_step = val_rel * deg_span
+        #print(deg_step)
+        #print(self.min_deg)
+        return self.min_deg + deg_step
+        
+    def val2rad(self):
+        """
+        Get the current servo value in degree.
+        """
+        return math.pi * self.val2degree() / 180
 
 class Servos:
     pwm = None
     
-    # pin numbers
+    # servo pins
     SERVO_LEFT = 0
     SERVO_RIGHT = 1
     SERVO_FACE = 14  # horizontal
     SERVO_HEAD = 15  # vertical
     
     # experimentally determined values for the servo pwm's
-    LEFT_DOWN = 780
-    LEFT_FORWARD = 480
+    # Currently valid for: pwm.set_pwm_freq(50)
+    LEFT_DOWN = 780  # TODO check if still correct
+    LEFT_FORWARD = 480  # TODO check if still correct
     
-    RIGHT_DOWN = 780
-    RIGHT_FORWARD = 1090
+    RIGHT_DOWN = 780  # TODO check if still correct
+    RIGHT_FORWARD = 1090  # TODO check if still correct
     
-    FACE_FORWARD = 1260
-    FACE_LEFT = FACE_FORWARD - 500
-    FACE_RIGHT = FACE_FORWARD + 500
+    FACE_FORWARD = 325
+    FACE_LEFT = FACE_FORWARD - 150
+    FACE_RIGHT = FACE_FORWARD + 150
     
-    HEAD_UP = 455  # == FORWARD, the robo cannot look up much
-    HEAD_DOWN = 1200  # TODO
+    HEAD_UP = 225  # == FORWARD, the robo cannot look up much
+    HEAD_DOWN = 420
+    
+    # servo objects
+    servoLeftTOF = Servo(pin=SERVO_LEFT,
+                         min_val=LEFT_DOWN,
+                         max_val=350,  # TODO test max_val 
+                         min_deg=-45,  # TODO measure
+                         max_deg=0,    # TODO measure
+                         val=LEFT_FORWARD,
+                         name="Servo_left")
+    
+    servoRightTOF = Servo(pin=SERVO_RIGHT,
+                          min_val=RIGHT_DOWN,
+                          max_val=1200,  # TODO test max_val 
+                          min_deg=-45,   # TODO measure
+                          max_deg=0,     # TODO measure
+                          val=RIGHT_FORWARD,
+                          name="Servo_right")
+    
+    servoFace = Servo(pin=14,
+                      min_val=FACE_LEFT,
+                      max_val=FACE_RIGHT,
+                      min_deg=-80,
+                      max_deg=80,
+                      val=FACE_FORWARD,
+                      name="Servo_face")
+    
+    servoHead = Servo(pin=15,
+                      min_val=HEAD_UP,
+                      max_val=HEAD_DOWN,
+                      min_deg=0,
+                      max_deg=90,
+                      val=HEAD_UP,
+                      name="Servo_head")
+    
     
     def __init__(self):
         """constructor"""
-        # Initialization at address 0x40
-        self.pwm = Adafruit_PCA9685.PCA9685()
+        self.pwm = pwm  # XXX get global var as class var to save refactoring
     
     def __del__(self):
-        """destructor"""
+        """destructor: reset all servos"""
         self.set_servo(self.SERVO_LEFT, 0)
         self.set_servo(self.SERVO_RIGHT, 0)
         self.set_servo(self.SERVO_FACE, 0)
         self.set_servo(self.SERVO_HEAD, 0)
     
-    def set_servo(self, servo, value):  # servos.set_serveo(SERVO.FRONT, Servo.FRONT_FORWARD)
+    def set_servo(self, servo, value):
         """
         Triggers given servo to move to given position.
+        
+        Example:
+            >>> servos.set_serveo(Servos.SERVO_FRONT, Servo.FRONT_FORWARD)
+        
         :param servo: servo to move
         :param value: position to move to
         :return:
         """
-        self.pwm.set_pwm(servo, 0, value)
+        if isinstance(servo, int):
+            # set by pin number, NO checks!
+            self.pwm.set_pwm(servo, 0, value)
+        elif isinstance(servo, Servo):
+            # set on servo object, safe
+            servo.setval(value)
+            print("%s is now set to %s" % (servo.name, servo.val2degree()))
     
     def left_servo_down(self):
         """
@@ -56,14 +155,6 @@ class Servos:
         Moves right servo to face the ground.
         :return:
         """
-        self.set_servo(self.SERVO_RIGHT, self.RIGHT_DOWN)
-    
-    def both_servos_down(self):
-        """
-        Moves left and right servo to face the ground.
-        :return:
-        """
-        self.set_servo(self.SERVO_LEFT, self.LEFT_DOWN)
         self.set_servo(self.SERVO_RIGHT, self.RIGHT_DOWN)
     
     def left_servo_forward(self):
