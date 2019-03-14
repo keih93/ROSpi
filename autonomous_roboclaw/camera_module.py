@@ -23,6 +23,7 @@ class Position(Enum):
     CENTER = 0
     TOO_LOW = -1
     
+    
 class Target(object):
     """
     Struct class holding object info:
@@ -32,28 +33,29 @@ class Target(object):
      + minimum size in camera
      + name
     """
-    
+
     def __init__(self, min, max, rad, name):
         self.min_hsv = min
         self.max_hsv = max
         self.min_radius = rad
         self.name = name
+        
 
 class CameraModule:
     
-    showImg = True
+    showImg = False
     camera = None
     rawCapture = None
     image = None
     drawHelpLines = True
-    limit_left = 0.375
+    limit_left = 0.4
     limit_right = 1 - limit_left
-    limit_bottom = 0.375
+    limit_bottom = 0.4
     limit_top = 1 - limit_bottom
     
-    obj_yellow_ball = Target((20, 70, 110), (85, 255, 195), 7, "Yellow Ball")
-    obj_blue_cube = Target((20, 70, 110), (135, 255, 195), 4, "Blue Cube")
-    obj_orange_ball = Target((9, 130, 110), (13, 255, 255), 5, "Orange Ball")
+    obj_yellow_ball = Target((20, 70, 60), (35, 255, 255), 14, "Yellow Ball")
+    obj_blue_cube = Target((20, 70, 110), (135, 255, 195), 8, "Blue Cube")
+    obj_orange_ball = Target((9, 130, 110), (13, 255, 255), 10, "Orange Ball")
     
     resolution = (640, 480)
     
@@ -64,6 +66,7 @@ class CameraModule:
         self.camera.framerate = 32
         self.camera.rotation = 180
         self.image = None
+        self.objectIsFresh = False
         self.rawCapture = PiRGBArray(self.camera, size=CameraModule.resolution)
         self.setTarget(CameraModule.obj_yellow_ball)
         time.sleep(0.1)
@@ -81,7 +84,6 @@ class CameraModule:
         ((x, y), radius) = ob
         center = (int(center[0]), int(center[1]))
         if self.showImg:
-            print("Drawing in image")
             cv2.circle(self.image, (int(x), int(y)), int(radius), (0, 255, 255), 2)
             cv2.circle(self.image, center, 3, (0, 0, 255), -1)
             cv2.putText(self.image,"("+str(center[0])+","+str(center[1])+")",
@@ -119,13 +121,14 @@ class CameraModule:
             c = max(cnts, key=cv2.contourArea)
             return (cv2.minEnclosingCircle(c), cv2.moments(c))
         return None, None
-        
+
     def getPosition(self):
         """
         Get the normalized position of current target object in the image.
         
         :returns (x,y) tuple of x-y-position, or None if object not found.
         """
+        
         ob, M = self._find_object()
         result = None
         if ob:
@@ -136,7 +139,6 @@ class CameraModule:
                 self._draw(ob, center)
                 result = (center[0] / CameraModule.resolution[0], center[1] / CameraModule.resolution[1])
         if self.showImg:
-            print("Showing image")
             cv2.imshow("Original", self.image)
             cv2.waitKey(1)
         return result
@@ -161,22 +163,22 @@ class CameraModule:
             print ("STOP")        
             return Direction.STOP
         
-    def getPositionOfObject(self):
+    def getPositionOfObject(self, center = None):
         """
         Finds the sector of the camera image in which the center of the object was found.
         9 sectors in the image, 10th sector: object center not found in image
         """
-        
-        center = self.getPosition()
+        if not center:
+            center = self.getPosition()
+            
         if center:
-            print("Coordinates: %s" % (center,))
             if center[0] > self.limit_right:
                 posX = Position.TOO_HIGH
             elif center[0] < self.limit_left:
                 posX = Position.TOO_LOW
             else:
                 posX = Position.CENTER
-            #note: screen ccordinate system (y axis points downward)
+            #note: screen coordinate system (y axis points downward)
             if center[1] > self.limit_top:
                 return (posX, Position.TOO_LOW)
             elif center[1] < self.limit_bottom:

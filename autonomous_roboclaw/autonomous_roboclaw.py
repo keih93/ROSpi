@@ -50,36 +50,34 @@ def main(testtime=0.0):
     servos = Servos()
     camera = camera_module.CameraModule()
     
-    while True:
-        checkSectorOfObject(camera)
+    #while True:
+        #checkSectorOfObject(camera)
         
-    if testtime > 0.0:
-        
+    if testtime > 0.0:   
             
-        
-        print("-"*60)
-        servos.set_servo(Servos.SERVO_HEAD, Servos.HEAD_UP)        
-        servos.set_servo(servos.servoFace, Servos.FACE_LEFT)
-        time.sleep(testtime)
-        servos.set_servo(servos.servoFace, Servos.FACE_RIGHT)
-        time.sleep(testtime)
-        servos.set_servo(servos.servoFace, Servos.FACE_FORWARD)
-        time.sleep(testtime)
-        
-        for x in range(Servos.HEAD_UP, Servos.HEAD_DOWN + 1, 5):
-            print(x)
-            #servos.set_servo(Servos.SERVO_HEAD, x)
-            servos.set_servo(Servos.servoHead, x)
+        if True:
+            print("-"*60)
+            servos.set_servo(Servos.SERVO_HEAD, Servos.HEAD_UP)        
+            servos.set_servo(servos.servoFace, Servos.FACE_LEFT)
+            time.sleep(testtime)
+            servos.set_servo(servos.servoFace, Servos.FACE_RIGHT)
+            time.sleep(testtime)
+            servos.set_servo(servos.servoFace, Servos.FACE_FORWARD)
+            time.sleep(testtime)
+            
+            for x in range(Servos.HEAD_UP, Servos.HEAD_DOWN + 1, 5):
+                print(x)
+                #servos.set_servo(Servos.SERVO_HEAD, x)
+                servos.set_servo(Servos.servoHead, x)
+                time.sleep(testtime)
+            
+            
+            servos.set_servo(Servos.SERVO_HEAD, Servos.HEAD_UP)
+            time.sleep(testtime)
+            servos.set_servo(Servos.SERVO_HEAD, 0)
             time.sleep(testtime)
         
-        
-        servos.set_servo(Servos.SERVO_HEAD, Servos.HEAD_UP)
-        time.sleep(testtime)
-        servos.set_servo(Servos.SERVO_HEAD, 0)
-        time.sleep(testtime)
-        
         while True:
-            
             print("move test: forward")
             engine.move_all_wheels_forward(40)
             time.sleep(testtime)

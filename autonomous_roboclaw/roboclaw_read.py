@@ -14,26 +14,26 @@ def displayspeed():
 
 	print("Encoder1:"),
 	if(enc1[0]==1):
-		print (enc1[1]),
-		print (format(enc1[2],'02x')),
+		print(enc1[1]),
+		print(format(enc1[2],'02x')),
 	else:
-		print ("failed"),
-	print ("Encoder2:"),
+		print("failed"),
+	print("Encoder2:"),
 	if(enc2[0]==1):
-		print (enc2[1]),
-		print (format(enc2[2],'02x')),
+		print(enc2[1]),
+		print(format(enc2[2],'02x')),
 	else:
-		print ("failed ") ,
-	print ("Speed1:"),
+		print("failed ") ,
+	print("Speed1:"),
 	if(speed1[0]):
-		print (speed1[1]),
+		print(speed1[1]),
 	else:
-		print ("failed"),
+		print("failed"),
 	print("Speed2:"),
 	if(speed2[0]):
-		print (speed2[1])
+		print(speed2[1])
 	else:
-		print ("failed ")
+		print("failed ")
 
 rc.Open()
 address = 0x80

@@ -21,19 +21,25 @@ class Servo(object):
         self.name = name if name is not None else "Servo_" + str(self.pin)
         
         # the initially set value, default to middle
-        self.val = val if val is not None else (self.min_val + self.max_val) / 2
+        self.setval(val if val is not None else (self.min_val + self.max_val) / 2)
         self.initial_val = self.val  # for reset
     
     def setval(self, val):
         """
         Set the current servo value clamped between its min and max.
         """
-        self.val = max(min(val, self.max_val), self.min_val)
+        self.val = int(max(min(val, self.max_val), self.min_val))
         
         # apply val to hardware
         pwm.set_pwm(self.pin, 0, self.val)
         
         return self.val
+    
+    def addval(self, val):
+        """
+        Add the given value to the current servo value.
+        """
+        self.setval(self.val + val)
     
     def val2degree(self):
         """
@@ -63,6 +69,7 @@ class Servos:
     SERVO_RIGHT = 1
     SERVO_FACE = 14  # horizontal
     SERVO_HEAD = 15  # vertical
+    SERVO_TAIL = 8
     
     # experimentally determined values for the servo pwm's
     # Currently valid for: pwm.set_pwm_freq(50)
@@ -76,7 +83,8 @@ class Servos:
     FACE_LEFT = FACE_FORWARD - 150
     FACE_RIGHT = FACE_FORWARD + 150
     
-    HEAD_UP = 225  # == FORWARD, the robo cannot look up much
+    HEAD_UP = 150
+    HEAD_FORWARD = 225
     HEAD_DOWN = 420
     
     # servo objects
@@ -109,8 +117,17 @@ class Servos:
                       max_val=HEAD_DOWN,
                       min_deg=0,
                       max_deg=90,
-                      val=HEAD_UP,
+                      val=HEAD_FORWARD,
                       name="Servo_head")
+    
+    servoTail = Servo(pin=8,
+                      min_val=150,
+                      max_val=500,
+                      min_deg=0,
+                      max_deg=90,
+                      val=HEAD_UP,
+                      name="Servo_tail")
+    
     
     
     def __init__(self):
