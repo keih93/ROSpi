@@ -22,7 +22,7 @@ class Servo(object):
         
         # the initially set value, default to middle
         self.setval(val if val is not None else (self.min_val + self.max_val) / 2)
-        self.initial_val = self.val  # for reset
+        self.initial_val = self.val  # useful for reset
     
     def setval(self, val):
         """
@@ -45,21 +45,31 @@ class Servo(object):
         """
         Get the current servo value in degree.
         """
-        #print(self.val)
         val_rel = (float(self.val - self.min_val) / (self.max_val - self.min_val))
-        #print(val_rel)
         deg_span = (self.max_deg - self.min_deg)
-        #print(deg_span)
         deg_step = val_rel * deg_span
-        #print(deg_step)
-        #print(self.min_deg)
         return self.min_deg + deg_step
+    
+    def degree2val(self, angle_degree):
+        """
+        Get the servo value for an angle in degree.
+        """
+        deg_rel = (float(angle_degree - self.min_deg) / (self.max_deg - self.min_deg))
+        val_span = (self.max_val - self.min_val)
+        val_step = deg_rel * val_span
+        return self.min_val + val_step
         
     def val2rad(self):
         """
-        Get the current servo value in degree.
+        Get the current servo value in radians.
         """
         return math.pi * self.val2degree() / 180
+        
+    def rad2val(self, angle_rad):
+        """
+        Get the servo value for an angle in radians.
+        """
+        return self.degree2val((360/(2 * math.pi)) * angle_rad)
 
 class Servos:
     pwm = None
