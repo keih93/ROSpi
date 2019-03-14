@@ -1,32 +1,41 @@
-import sys
-
-sys.path.append('/usr/local/lib/python3.5/site-packages')
-"""
-import numpy as np
+from picamera.array import PiRGBArray
+from picamera import PiCamera
+from threading import Thread
 import cv2
 
-cap = cv2.VideoCapture(0)
- 
-while(True):
-    ret, frame = cap.read()
-    frame = cv2.flip(frame, -1) # Flip camera vertically
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+class CameraThread:
+    def __init__(self, camera):
+        self.rawCapture = PiRGBArray(camera, size= camera.resolution)
+        self.stopped = False
+        self.camera = camera
+        self.stream = camera.capture_continuous(self.rawCapture,
+			format="bgr", use_video_port=True)
     
-    cv2.imshow('frame', frame)
-    cv2.imshow('gray', gray)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    def start(self):
+        # start the thread to read frames from the video stream
+        Thread(target=self.update, args=()).start()
+        return self
+ 
+    def update(self):
+        # keep looping infinitely until the thread is stopped
+        while True:
+            # if the thread indicator variable is set, stop the thread
+            if self.stopped:
+                self.stream.release()
+                self.rawCapture.close()
+                self.camera.close()
+                return
 
-cap.release()
-cv2.destroyAllWindows()
-"""
+            for f in self.stream:
+                # grab the frame from the stream and clear the stream in
+                # preparation for the next frame
+                self.frame = f.array
+                self.rawCapture.truncate(0)
 
-from picamera import PiCamera
-from time import sleep
+    def read(self):
+        # return the frame most recently read
+        return self.frame
 
-camera = PiCamera()
-
-camera.start_preview()
-camera.rotation = 180
-sleep(10)
-camera.stop_preview()
+    def stop(self):
+        # indicate that the thread should be stopped
+        self.stopped = True

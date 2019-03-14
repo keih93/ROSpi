@@ -2,7 +2,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 from enum import Enum
-
+from camera import CameraThread
 import sys
 
 sys.path.append('/usr/local/lib/python3.5/site-packages')
@@ -45,7 +45,6 @@ class CameraModule:
     
     showImg = False
     camera = None
-    rawCapture = None
     image = None
     drawHelpLines = True
     limit_left = 0.4
@@ -65,19 +64,19 @@ class CameraModule:
         self.camera.resolution = CameraModule.resolution
         self.camera.framerate = 32
         self.camera.rotation = 180
+        self.cameraThread = CameraThread(self.camera)
         self.image = None
         self.objectIsFresh = False
-        self.rawCapture = PiRGBArray(self.camera, size=CameraModule.resolution)
         self.setTarget(CameraModule.obj_yellow_ball)
         time.sleep(0.1)
+        self.cameraThread.start()
         
     def setTarget(self, t):
         self.target = t
         print("Camera: Looking for " + self.target.name)
         
     def _fetchImage(self):
-        self.camera.capture(self.rawCapture, format="bgr", use_video_port=True)
-        self.image = self.rawCapture.array
+        self.image = self.cameraThread.read().array
       
     
     def _draw(self, ob, center):
@@ -113,7 +112,6 @@ class CameraModule:
         mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
         cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[-2]
         center = None
-        self.rawCapture.truncate(0)
         if len(cnts) > 0:
             # find the largest contour in the mask, then use
             # it to compute the minimum enclosing circle and
@@ -187,5 +185,8 @@ class CameraModule:
                 return (posX, Position.CENTER)
         else:
            return None
+    
+    def __del__(self):
+        self.cameraThread.stop()
         
     
