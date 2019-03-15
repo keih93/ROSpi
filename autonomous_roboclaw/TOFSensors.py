@@ -155,22 +155,20 @@ class TOFSensors:
 
         distance_f_right_sensor = self.tof_f_right.get_distance()
         distance_f_left_sensor = self.tof_f_left.get_distance()
+        print("Distance f_left sensor: {} , Distance f_right sensor: {}".format(str(distance_f_left_sensor),
+                                                                                str(distance_f_right_sensor)))
         
+        # XXX backward facing sensors have been removed
         #distance_b_right_sensor = self.tof_b_right.get_distance()
         #distance_b_left_sensor = self.tof_b_left.get_distance()
+        #print("Distance b_left sensor: {} , Distance b_right sensor: {}".format(str(distance_b_left_sensor),
+        #                                                                        str(distance_b_right_sensor)))
         
         distance_h1_sensor = self.tof_h1.get_distance()
         distance_h2_sensor = self.tof_h2.get_distance()
         distance_h3_sensor = self.tof_h3.get_distance()
         distance_h4_sensor = self.tof_h4.get_distance()
         distance_h5_sensor = self.tof_h5.get_distance()
-        
-        print("Distance f_left sensor: {} , Distance f_right sensor: {}".format(str(distance_f_left_sensor),
-                                                                            str(distance_f_right_sensor)))
-        
-        #print("Distance b_left sensor: {} , Distance b_right sensor: {}".format(str(distance_b_left_sensor),
-         #                                                                   str(distance_b_right_sensor)))
-        
         print("h1: {} , h2: {} , h3: {} , h4: {} , h5: {}".format(str(distance_h1_sensor),
                 str(distance_h2_sensor), str(distance_h3_sensor), str(distance_h4_sensor), str(distance_h5_sensor)))
         

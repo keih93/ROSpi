@@ -10,10 +10,16 @@ class CameraThread:
         self.camera = camera
         self.stream = camera.capture_continuous(self.rawCapture,
 			format="bgr", use_video_port=True)
+        for f in self.stream:
+            self.frame = f.array
+            self.rawCapture.truncate(0)
+            return
     
     def start(self):
         # start the thread to read frames from the video stream
-        Thread(target=self.update, args=()).start()
+        t = Thread(target=self.update, args=())
+        t.daemon = True
+        t.start()
         return self
  
     def update(self):

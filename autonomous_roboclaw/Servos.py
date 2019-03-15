@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import math
 
 import Adafruit_PCA9685
@@ -24,9 +25,12 @@ class Servo(object):
         self.setval(val if val is not None else (self.min_val + self.max_val) / 2)
         self.initial_val = self.val  # useful for reset
     
+    def reset(self):
+        self.setval(self.initial_val)
+    
     def setval(self, val):
         """
-        Set the current servo value clamped between its min and max.
+        Set the current servo value, clamped between its min and max.
         """
         self.val = int(max(min(val, self.max_val), self.min_val))
         
@@ -39,7 +43,12 @@ class Servo(object):
         """
         Add the given value to the current servo value.
         """
-        self.setval(self.val + val)
+        # round relative value away from zero
+        if val > 0:
+            val = int(round(val + 0.5))
+        elif val < 0:
+            val = int(round(val - 0.5))
+        self.setval(self.val + val)  
     
     def val2degree(self):
         """
@@ -93,7 +102,7 @@ class Servos:
     FACE_LEFT = FACE_FORWARD - 150
     FACE_RIGHT = FACE_FORWARD + 150
     
-    HEAD_UP = 150
+    HEAD_UP = 175
     HEAD_FORWARD = 225
     HEAD_DOWN = 420
     
@@ -125,17 +134,17 @@ class Servos:
     servoHead = Servo(pin=15,
                       min_val=HEAD_UP,
                       max_val=HEAD_DOWN,
-                      min_deg=0,
+                      min_deg=-25,
                       max_deg=90,
                       val=HEAD_FORWARD,
                       name="Servo_head")
     
     servoTail = Servo(pin=8,
-                      min_val=150,
-                      max_val=500,
+                      min_val=280,
+                      max_val=400,
                       min_deg=0,
                       max_deg=90,
-                      val=HEAD_UP,
+                      val=350,
                       name="Servo_tail")
     
     
@@ -143,13 +152,14 @@ class Servos:
     def __init__(self):
         """constructor"""
         self.pwm = pwm  # XXX get global var as class var to save refactoring
+        
+        # list of "official" servos this module manages:
+        self.all_servos = [Servos.servoLeftTOF, Servos.servoRightTOF, Servos.servoFace, Servos.servoHead, Servos.servoTail]
     
     def __del__(self):
         """destructor: reset all servos"""
-        self.set_servo(self.SERVO_LEFT, 0)
-        self.set_servo(self.SERVO_RIGHT, 0)
-        self.set_servo(self.SERVO_FACE, 0)
-        self.set_servo(self.SERVO_HEAD, 0)
+        for s in self.all_servos:
+            self.set_servo(s.pin, 0)
     
     def set_servo(self, servo, value):
         """
@@ -168,7 +178,12 @@ class Servos:
         elif isinstance(servo, Servo):
             # set on servo object, safe
             servo.setval(value)
-            print("%s is now set to %s" % (servo.name, servo.val2degree()))
+            print(u"%s is now set to %s°" % (servo.name, servo.val2degree()))
+    
+    def reset(self):
+        """Reset all servos to default"""
+        for s in self.all_servos:
+            s.reset()
     
     def left_servo_down(self):
         """
@@ -198,18 +213,11 @@ class Servos:
         """
         self.set_servo(self.SERVO_RIGHT, self.RIGHT_FORWARD)
     
-    def both_servos_forward(self):
+    def side_servos_forward(self):
         """
         Moves left and right servo to face forward.
         :return:
         """
         self.set_servo(self.SERVO_LEFT, self.LEFT_FORWARD)
         self.set_servo(self.SERVO_RIGHT, self.RIGHT_FORWARD)
-    
-    def front_servo_forward(self):
-        """
-        Moves front servo to face forward.
-        :return:
-        """
-        self.set_servo(self.SERVO_FACE, self.FACE_FORWARD)
     

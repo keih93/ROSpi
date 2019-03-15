@@ -43,7 +43,7 @@ class Target(object):
 
 class CameraModule:
     
-    showImg = False
+    showImg = True
     camera = None
     image = None
     drawHelpLines = True
@@ -53,7 +53,7 @@ class CameraModule:
     limit_top = 1 - limit_bottom
     
     obj_yellow_ball = Target((20, 70, 60), (35, 255, 255), 14, "Yellow Ball")
-    obj_blue_cube = Target((20, 70, 110), (135, 255, 195), 8, "Blue Cube")
+    obj_blue_cube = Target((40, 100, 60), (185, 255, 195), 8, "Blue Cube")
     obj_orange_ball = Target((9, 130, 110), (13, 255, 255), 10, "Orange Ball")
     
     resolution = (640, 480)
@@ -66,17 +66,27 @@ class CameraModule:
         self.camera.rotation = 180
         self.cameraThread = CameraThread(self.camera)
         self.image = None
-        self.objectIsFresh = False
         self.setTarget(CameraModule.obj_yellow_ball)
         time.sleep(0.1)
         self.cameraThread.start()
         
     def setTarget(self, t):
-        self.target = t
+        if isinstance(t, str):
+            self.target = self._nameToTarget(t)
+        else:
+            self.target = t
         print("Camera: Looking for " + self.target.name)
         
+    def _nameToTarget(self, t):
+        if t.startswith('b'):
+            return self.obj_blue_cube
+        if t.startswith('o'):
+            return self.obj_orange_ball
+        else:
+            return self.obj_yellow_ball
+        
     def _fetchImage(self):
-        self.image = self.cameraThread.read().array
+        self.image = self.cameraThread.read()
       
     
     def _draw(self, ob, center):
@@ -88,17 +98,20 @@ class CameraModule:
             cv2.putText(self.image,"("+str(center[0])+","+str(center[1])+")",
                         (center[0]+10,center[1]+15),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 255), 1)
-            lineThickness = 1
             if self.drawHelpLines:
-                y1Coor = (int)(CameraModule.resolution[1] * self.limit_top)
-                y2Coor = (int)(CameraModule.resolution[1] * self.limit_bottom)
-                x1Coor = (int)(CameraModule.resolution[0] * self.limit_left)
-                x2Coor = (int)(CameraModule.resolution[0] * self.limit_right)
+                lineThickness = 1
+                lineColor = (0,255,255)
+                y_max = CameraModule.resolution[1]
+                x_max = CameraModule.resolution[0]
+                y1Coor = int(y_max * self.limit_top)
+                y2Coor = int(y_max * self.limit_bottom)
+                x1Coor = int(x_max * self.limit_left)
+                x2Coor = int(x_max * self.limit_right)
                 
-                cv2.line(self.image, (0,y1Coor), (640,y1Coor), (0,255,255), lineThickness)
-                cv2.line(self.image, (0,y2Coor), (640,y2Coor), (0,255,255), lineThickness)
-                cv2.line(self.image, (x1Coor,0), (x1Coor,480), (0,255,255), lineThickness)
-                cv2.line(self.image, (x2Coor,0), (x2Coor,480), (0,255,255), lineThickness)
+                cv2.line(self.image, (0,y1Coor), (x_max,y1Coor), lineColor, lineThickness)
+                cv2.line(self.image, (0,y2Coor), (x_max,y2Coor), lineColor, lineThickness)
+                cv2.line(self.image, (x1Coor,0), (x1Coor,y_max), lineColor, lineThickness)
+                cv2.line(self.image, (x2Coor,0), (x2Coor,y_max), lineColor, lineThickness)
         
     def _find_object(self):
         """
@@ -145,6 +158,9 @@ class CameraModule:
     def getDirection(self):
         """
         Find the object, get its position and translate that to a direction.
+        
+        TODO now that the head is moveable, this method needs an overhaul to
+        take the camera direction into acount.
         """
         center = self.getPosition()
         if center:

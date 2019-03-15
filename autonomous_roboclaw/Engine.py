@@ -6,9 +6,6 @@ class Engine:
     speed_right_wheels = 0
     speed_left_wheels = 0
 
-    def __init__(self):
-        pass
-
     ser = serial.Serial(
         port='/dev/ttyS0',
         baudrate=19200,  # 19200,
@@ -16,6 +13,13 @@ class Engine:
         stopbits=serial.STOPBITS_ONE,
         bytesize=serial.EIGHTBITS
     )
+
+    def __init__(self):
+        pass
+    
+    def __del__(self):
+        """destructor"""
+        self.stop_all_wheels()
 
     def move_right_wheels_forward(self, speed=50):
         """

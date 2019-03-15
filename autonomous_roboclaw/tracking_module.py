@@ -63,13 +63,12 @@ class TrackingModule:
                 
         else:
             # object found
-            self.moveTail()
             x, y = currentSector
             x_speed, y_speed = currentOffset  # temporary, used in calcSpeeds()
             self.lastSeenX, self.lastSeenY = currentSector # save for later
             
         if x is Position.CENTER and y is Position.CENTER:
-            # nothing to do, we are looking at the object!
+            self.moveTail()
             return
         
         x_speed, y_speed = calcSpeeds()
@@ -88,9 +87,6 @@ class TrackingModule:
             if self.servoTail.val <= self.servoTail.min_val:
                 self.moveTailForward = True
 
-         
-            
-            
 def main():
     tm = TrackingModule()
     while True:

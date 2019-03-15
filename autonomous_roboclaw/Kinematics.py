@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ikpy.chain import Chain
+from ikpy.chain import Chain  # REMOVED ikpy FROM SYSTEM!!
 from ikpy.link import OriginLink, URDFLink, DHLink
 #from Link_FIXED import DHLink
 import numpy as np
@@ -20,7 +20,7 @@ d2 = 0.020
 alpha2 = rad90
 
 # eye in relation to face
-a3 = 0.030
+a3 = 0.035
 d3 = 0.0  # variable == focal_lenght??
 alpha3 = rad90
 theta3 = 0.0
@@ -89,16 +89,32 @@ look_straight = [[1, 0, 0, 0],
                  [0, 0, 1, 0],
                  [0, 0, 0, 1]]
 
+# translate in all directions
+tf1 = [[1, 0, 0, 2],
+       [0, 1, 0, 2],
+       [0, 0, 1, 2],
+       [0, 0, 0, 1]]
+
+# rotate along all axes
+tf2 = [[0.7, 0, 0, 2],
+       [0, 0.7, 0, 2],
+       [0, 0, 0.7, 2],
+       [0, 0, 0, 1]]
+
 #robo__chain.inverse_kinematics(look_straight)
 
-#import time
+import time
 #time.sleep(1000)
 
 if __name__ == '__main__':
     # show inverse kinematic
     import matplotlib.pyplot
     from mpl_toolkits.mplot3d import Axes3D
-    ax = matplotlib.pyplot.figure().add_subplot(111, projection='3d')
-    robo_chain.plot(robo_chain.inverse_kinematics(look_straight), ax)
-    matplotlib.pyplot.show()
+    
+    
+    for tf in [look_straight, tf1, tf2]:
+        ax = matplotlib.pyplot.figure().add_subplot(111, projection='3d')
+        robo_chain.plot(robo_chain.inverse_kinematics(tf), ax)
+        matplotlib.pyplot.show()
+        # close current plot, to show the next!
 
