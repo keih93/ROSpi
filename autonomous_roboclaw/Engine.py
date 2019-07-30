@@ -5,7 +5,7 @@ from roboclaw import Roboclaw
 
 class Engine:
     address = 0x80
-    roboclaw = Roboclaw( "/dev/ttyS0", 38400 )
+    roboclaw = Roboclaw("/dev/ttyS0", 38400)
     roboclaw.Open()
 
     def __init__(self):
@@ -75,16 +75,14 @@ class Engine:
         :return:
 
         """
-        self.move_right_wheels_forward(speed)
-        self.move_left_wheels_forward(speed)
+        self.roboclaw.ForwardMixed(self.address, speed)
 
     def stop_all_wheels(self):
         """
         Stop all wheels by setting speed to 0
         :return:
         """
-        self.stop_right_wheels()
-        self.stop_left_wheels()
+        self.roboclaw.ForwardMixed(self.address, 0)
 
     def move_all_wheels_backward(self, speed=50):
         """
@@ -93,8 +91,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.move_right_wheels_backward(speed)
-        self.move_left_wheels_backward(speed)
+        self.roboclaw.BackwardMixed(self.address, speed)
 
     def turn_around_left(self, speed=35):
         """
@@ -104,8 +101,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.move_right_wheels_forward(speed)
-        self.move_left_wheels_backward(speed)
+        self.roboclaw.TurnLeftMixed(self.address, speed)
 
 
     def turn_around_right(self, speed=35):
@@ -116,5 +112,4 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.move_right_wheels_backward(speed)
-        self.move_left_wheels_forward(speed)
+        self.roboclaw.TurnRightMixed(self.address, speed)
