@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
 # To use a consistent encoding
@@ -34,7 +35,7 @@ setup(
     install_requires=['Adafruit-GPIO==1.0.3',
                       'Adafruit-PCA9685==1.0.1',
                       'Adafruit-PureIO==0.2.1',
-                      'pkg-resources==0.0.0',
+                      #'pkg-resources==0.0.0', # this line was problematic => WE INSTALLED 33.1.1 manually via apt instead!
                       'pyserial==3.4',
                       'RPi.GPIO==0.6.3',
                       'smbus2==0.2.0',

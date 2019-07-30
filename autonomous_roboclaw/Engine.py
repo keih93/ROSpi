@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import serial
 
 
@@ -5,16 +6,20 @@ class Engine:
     speed_right_wheels = 0
     speed_left_wheels = 0
 
-    def __init__(self):
-        pass
-
     ser = serial.Serial(
-        port='/dev/ttyUSB0',
-        baudrate=19200,
+        port='/dev/ttyS0',
+        baudrate=19200,  # 19200,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
         bytesize=serial.EIGHTBITS
     )
+
+    def __init__(self):
+        pass
+    
+    def __del__(self):
+        """destructor"""
+        self.stop_all_wheels()
 
     def move_right_wheels_forward(self, speed=50):
         """
@@ -23,7 +28,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.ser.write(bytes([128, 0, speed, (128 + speed) & 0x7F]))
+        self.ser.write(bytes([128, 0, speed, ((128 + speed) & 0x7F)]))
 
     def move_right_wheels_backward(self, speed=50):
         """
@@ -32,14 +37,14 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.ser.write(bytes([128, 1, speed, (129 + speed) & 0x7F]))
+        self.ser.write(bytes([128, 1, speed, ((129 + speed) & 0x7F)]))
 
     def stop_right_wheels(self):
         """
         Stop the right wheels by setting speed to 0
         :return:
         """
-        self.ser.write(bytes([128, 0, 0, 128 & 0x7F]))
+        self.ser.write(bytes([128, 0, 0, (128 & 0x7F)]))
 
     def move_left_wheels_backward(self, speed=50):
         """
@@ -48,7 +53,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.ser.write(bytes([128, 4, speed, (132 + speed) & 0x7F]))
+        self.ser.write(bytes([128, 4, speed, ((132 + speed) & 0x7F)]))
 
     def move_left_wheels_forward(self, speed=50):
         """
@@ -57,7 +62,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.ser.write(bytes([128, 5, speed, (133 + speed) & 0x7F]))
+        self.ser.write(bytes([128, 5, speed, ((133 + speed) & 0x7F)]))
 
 
     def stop_left_wheels(self):
@@ -66,7 +71,7 @@ class Engine:
         :return:
 
         """
-        self.ser.write(bytes([128, 4, 0, 132 & 0x7F]))
+        self.ser.write(bytes([128, 4, 0, (132 & 0x7F)]))
 
     def move_all_wheels_forward(self, speed=50):
         """
