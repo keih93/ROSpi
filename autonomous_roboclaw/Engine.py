@@ -1,22 +1,16 @@
 # -*- coding: utf-8 -*-
 import serial
+from roboclaw import Roboclaw
 
 
 class Engine:
-    speed_right_wheels = 0
-    speed_left_wheels = 0
-
-    ser = serial.Serial(
-        port='/dev/ttyS0',
-        baudrate=19200,  # 19200,
-        parity=serial.PARITY_NONE,
-        stopbits=serial.STOPBITS_ONE,
-        bytesize=serial.EIGHTBITS
-    )
+    address = 0x80
+    roboclaw = Roboclaw( "/dev/ttyS0", 38400 )
+    roboclaw.Open()
 
     def __init__(self):
         pass
-    
+
     def __del__(self):
         """destructor"""
         self.stop_all_wheels()
@@ -28,7 +22,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.ser.write(bytes([128, 0, speed, ((128 + speed) & 0x7F)]))
+        self.roboclaw.ForwardM1( self.address, speed )
 
     def move_right_wheels_backward(self, speed=50):
         """
@@ -37,14 +31,14 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.ser.write(bytes([128, 1, speed, ((129 + speed) & 0x7F)]))
+        self.roboclaw.BackwardM1( self.address, speed )
 
     def stop_right_wheels(self):
         """
         Stop the right wheels by setting speed to 0
         :return:
         """
-        self.ser.write(bytes([128, 0, 0, (128 & 0x7F)]))
+        self.roboclaw.ForwardM1( self.address, 0 )
 
     def move_left_wheels_backward(self, speed=50):
         """
@@ -53,7 +47,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.ser.write(bytes([128, 4, speed, ((132 + speed) & 0x7F)]))
+        self.roboclaw.BackwardM2( self.address, speed )
 
     def move_left_wheels_forward(self, speed=50):
         """
@@ -62,8 +56,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.ser.write(bytes([128, 5, speed, ((133 + speed) & 0x7F)]))
-
+        self.roboclaw.ForwardM2( self.address, speed )
 
     def stop_left_wheels(self):
         """
@@ -71,7 +64,7 @@ class Engine:
         :return:
 
         """
-        self.ser.write(bytes([128, 4, 0, (132 & 0x7F)]))
+        self.roboclaw.ForwardM2( self.address, 0 )
 
     def move_all_wheels_forward(self, speed=50):
         """
@@ -81,16 +74,14 @@ class Engine:
         :return:
 
         """
-        self.move_right_wheels_forward(speed)
-        self.move_left_wheels_forward(speed)
+        self.roboclaw.ForwardMixed( self.address, speed )
 
     def stop_all_wheels(self):
         """
         Stop all wheels by setting speed to 0
         :return:
         """
-        self.stop_right_wheels()
-        self.stop_left_wheels()
+        self.roboclaw.ForwardMixed( self.address, 0 )
 
     def move_all_wheels_backward(self, speed=50):
         """
@@ -99,8 +90,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.move_right_wheels_backward(speed)
-        self.move_left_wheels_backward(speed)
+        self.roboclaw.BackwardMixed( self.address, speed )
 
     def turn_around_left(self, speed=35):
         """
@@ -110,9 +100,7 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.move_right_wheels_forward(speed)
-        self.move_left_wheels_backward(speed)
-
+        self.roboclaw.TurnLeftMixed( self.address, speed )
 
     def turn_around_right(self, speed=35):
         """
@@ -122,5 +110,4 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.move_right_wheels_backward(speed)
-        self.move_left_wheels_forward(speed)
+        self.roboclaw.TurnRightMixed( self.address, speed )
