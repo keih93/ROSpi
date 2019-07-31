@@ -3,11 +3,13 @@ Position = camera_module.Position
 import Servos
 import math
 import time
+import Engine
 from threading import Thread
 
 
 class TrackingModule:
     
+	engine = Engine()
     camera = camera_module.CameraModule()
     s = Servos.Servos()
     servoFace = s.servoFace
@@ -19,8 +21,8 @@ class TrackingModule:
     
     def __init__(self):
         pass
-    
-    def followObject(self):
+
+    def followObject(self, withHead=True):
         def calcSpeeds():
             """Helper subroutine, using outer vars x, y, x_speed, y_speed"""
             n_x = abs(x_speed - 0.5)
@@ -72,10 +74,20 @@ class TrackingModule:
             return
         
         x_speed, y_speed = calcSpeeds()
+
+		# differ in vertical movement between movement with head and movement by wheels
+
+		if withHead:
+			self.servoFace.addval(x_speed * x_step)			
+		else:
+			if (x_speed * x_step) >= 0:
+				self.engine.turn_around_left(x_speed)
+			else:
+				self.engine.turn_around_right(x_speed)
+
+		# always move the Head horizontally. 
+		self.servoHead.addval(y_speed * y_step)
         
-        self.servoFace.addval(x_speed * x_step)
-        
-        self.servoHead.addval(y_speed * y_step)
     
     def moveTail(self):
         if self.moveTailForward:
