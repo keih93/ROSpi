@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import serial
-from roboclaw_3 import Roboclaw
+from roboclaw import Roboclaw
 
 
 class Engine:

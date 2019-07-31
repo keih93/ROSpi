@@ -9,7 +9,7 @@ from threading import Thread
 
 class TrackingModule:
     
-	engine = Engine()
+    engine = Engine.Engine()
     camera = camera_module.CameraModule()
     s = Servos.Servos()
     servoFace = s.servoFace
@@ -75,34 +75,34 @@ class TrackingModule:
         
         x_speed, y_speed = calcSpeeds()
 
-		# differ in vertical movement between movement with head and movement by wheels
+        # differ in vertical movement between movement with head and movement by wheels
 
-		if withHead:
-			self.servoFace.addval(x_speed * x_step)			
-		else:
-			if (x_speed * x_step) >= 0:
-				self.engine.turn_around_left(x_speed)
-			else:
-				self.engine.turn_around_right(x_speed)
+        if withHead:
+                self.servoFace.addval(x_speed * x_step)			
+        else:
+            if (x_speed * x_step) >= 0:
+                self.engine.turn_around_left(int(x_speed * 300))
+            else:
+                self.engine.turn_around_right(int(-x_speed * 300))
 
-		# always move the Head horizontally. 
-		self.servoHead.addval(y_speed * y_step)
+        # always move the Head horizontally. 
+        self.servoHead.addval(y_speed * y_step * 2)
         
     
     def moveTail(self):
         if self.moveTailForward:
-            self.servoTail.addval(20)
+            self.servoTail.addval(80)
             if self.servoTail.val >= self.servoTail.max_val:
                 self.moveTailForward = False
         else:
-            self.servoTail.addval(-20)
+            self.servoTail.addval(-80)
             if self.servoTail.val <= self.servoTail.min_val:
                 self.moveTailForward = True
 
 def main():
     tm = TrackingModule()
     while True:
-        tm.followObject()
+        tm.followObject(False)
         #tm.moveTail()
 
 if __name__ == '__main__':
