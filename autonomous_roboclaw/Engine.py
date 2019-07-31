@@ -74,14 +74,16 @@ class Engine:
         :return:
 
         """
-        self.roboclaw.ForwardMixed( self.address, speed )
+        self.move_right_wheels_forward(speed)
+        self.move_left_wheels_forward(speed)
 
     def stop_all_wheels(self):
         """
         Stop all wheels by setting speed to 0
         :return:
         """
-        self.roboclaw.ForwardMixed( self.address, 0 )
+        self.stop_right_wheels()
+        self.stop_left_wheels()
 
     def move_all_wheels_backward(self, speed=50):
         """
@@ -90,8 +92,9 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.roboclaw.BackwardMixed( self.address, speed )
-
+        self.move_right_wheels_backward(speed)
+        self.move_left_wheels_backward(speed)
+        
     def turn_around_left(self, speed=35):
         """
         Performs a left-hand turn on the spot by rotating the wheels in opposite directions.
@@ -100,7 +103,8 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.roboclaw.TurnLeftMixed( self.address, speed )
+        self.move_right_wheels_forward(speed)
+        self.move_left_wheels_backward(speed)
 
     def turn_around_right(self, speed=35):
         """
@@ -110,4 +114,5 @@ class Engine:
         :param speed: An int which indicates the speed
         :return:
         """
-        self.roboclaw.TurnRightMixed( self.address, speed )
+        self.move_right_wheels_backward(speed)
+        self.move_left_wheels_forward(speed)
