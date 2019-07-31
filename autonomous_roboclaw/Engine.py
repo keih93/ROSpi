@@ -4,12 +4,12 @@ from roboclaw import Roboclaw
 
 
 class Engine:
-    address = 0x80
-    roboclaw = Roboclaw( "/dev/ttyS0", 38400 )
-    roboclaw.Open()
+    
 
     def __init__(self):
-        pass
+        self.address = 0x80
+        self.roboclaw = Roboclaw( "/dev/ttyS0", 38400 )
+        self.roboclaw.Open()
 
     def __del__(self):
         """destructor"""
