@@ -30,7 +30,7 @@ def run_test(sleeptime):
         print('-' * 60)
         print("Testing engine")
         print("move test: forward")
-        engine.move_all_wheels_forward(40)
+        engine.move_right_wheels_forward(0)
         time.sleep(3.0)
         print("move test backwards")
         engine.move_all_wheels_backward(40)

@@ -45,3 +45,7 @@ class CameraThread:
     def stop(self):
         # indicate that the thread should be stopped
         self.stopped = True
+        
+
+def main():
+    camera = cv2.VideoCapture(0)
