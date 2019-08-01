@@ -4,12 +4,29 @@ import Servos
 import math
 import time
 import Engine
+import TOFSensors
 from threading import Thread
+from enum import Enum
 
+
+class State(Enum):
+    FREE = 0
+    BLOCKED = 1
+    ERROR = 2
 
 class TrackingModule:
-    
+    tof_h1 = None
+    tof_h2 = None
+    tof_h3 = None
+    tof_h4 = None
+    tof_h5 = None
+    tof_f_right = None
+    tof_f_left = None
+    state_f_left = State.FREE
+    state_f_right = State.FREE
+        
     engine = Engine.Engine()
+    tof = TOFSensors.TOFSensors()
     camera = camera_module.CameraModule()
     s = Servos.Servos()
     servoFace = s.servoFace
@@ -98,6 +115,43 @@ class TrackingModule:
             self.servoTail.addval(-80)
             if self.servoTail.val <= self.servoTail.min_val:
                 self.moveTailForward = True
+     
+        #Get TOF Sensor Data
+        distance_h2_sensor = self.tof.tof_h2.get_distance()
+        distance_h3_sensor = self.tof.tof_h3.get_distance()
+        distance_h4_sensor = self.tof.tof_h4.get_distance()
+        distance_f_right_sensor = self.tof.tof_f_right.get_distance()
+        distance_f_left_sensor = self.tof.tof_f_left.get_distance()
+        
+        #Set States if their is no floor left
+        if distance_f_right_sensor > 300:
+            self.state_f_right = State.BLOCKED
+
+        else:
+            self.state_f_right = State.FREE
+
+        if distance_f_left_sensor > 300:
+            self.state_f_left = State.BLOCKED
+
+        else:
+            self.state_f_left = State.FREE
+        
+        #print("Distance f_left sensor: {} , Distance f_right sensor: {}, State Left {}, State Right {}".format(str(distance_f_right_sensor),
+         #                                                                      str(distance_f_left_sensor), str(self.state_f_left),
+          #                                                                                                     str(self.state_f_right)))
+        #print("h2: {} , h3: {} , h4: {}".format(str(distance_h2_sensor), str(distance_h3_sensor), str(distance_h4_sensor)))
+        
+        
+        sum_distance = distance_h2_sensor + distance_h3_sensor + distance_h4_sensor
+        
+        #Drive forward if we detect the ball in front of us and if their is floor left
+        if sum_distance / 3 > 400 and self.state_f_left is State.FREE and self.state_f_right is State.FREE:
+            self.engine.move_all_wheels_forward(20)
+        elif distance_f_right_sensor == -1 and distance_f_left_sensor == -1:
+            self.engine.stop_all_wheels()
+        else:
+            self.engine.stop_all_wheels()
+        
 
 def main():
     tm = TrackingModule()
