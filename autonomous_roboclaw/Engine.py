@@ -4,8 +4,6 @@ from roboclaw_3 import Roboclaw
 
 
 class Engine:
-    
-
     def __init__(self):
         self.address = 0x80
         self.roboclaw = Roboclaw( "/dev/ttyS0", 38400 )
