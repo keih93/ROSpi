@@ -154,8 +154,7 @@ class CameraModule:
             cv2.waitKey(1)
         return result
     
-    """
-     def getRadius(self):
+    def getRadius(self):
         """
         Get radius
         :returns radius of object
@@ -168,7 +167,6 @@ class CameraModule:
             if radius > self.target.min_radius:
                 result = radius
         return result
-      """  
     
     def getDirection(self):
         """

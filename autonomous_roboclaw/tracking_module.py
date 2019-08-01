@@ -40,6 +40,11 @@ class TrackingModule:
         pass
 
     def followObject(self, withHead=True):
+        # ------------------------
+        # withHead:
+        # differ in vertical movement between movement with head and movement by wheels
+        # ------------------------
+        
         def calcSpeeds():
             """Helper subroutine, using outer vars x, y, x_speed, y_speed"""
             n_x = abs(x_speed - 0.5)
@@ -68,8 +73,6 @@ class TrackingModule:
         
         currentOffset = self.camera.getPosition() 
         currentSector = self.camera.getPositionOfObject(currentOffset)
-        #Get size of object
-        #currentRadius = self.camera.getRadius()
         
         if currentSector is None or currentOffset is None:  # if no object found
             if self.lastSeenX is None or self.lastSeenY is None:  # and we have never seen it
@@ -81,7 +84,7 @@ class TrackingModule:
                 y = self.lastSeenY
                 x_speed = float(x.value / 10.0)  # search in last direction with offset +-1!
                 y_speed = float(y.value / 10.0) # XXX using knowledge about enum values ...
-                
+        
         else:
             # object found
             x, y = currentSector
@@ -99,17 +102,21 @@ class TrackingModule:
         if withHead:
                 self.servoFace.addval(x_speed * x_step)			
         else:
-            if (x_speed * x_step) >= 0:
-                self.engine.turn_around_left(int(x_speed * 300))
-            else:
-                self.engine.turn_around_right(int(-x_speed * 300))
+            if (x_speed * x_step) > 0:
+                speed = int(x_speed * 300)
+                if x_speed < 0.05:  
+                    speed = 20
+                self.engine.turn_around_right(speed)
+            elif (x_speed * x_step) < 0:
+                speed = int(-x_speed * 300)
+                if x_speed > -0.05:
+                    speed = 20
+                self.engine.turn_around_left(speed)
 
         # always move the Head horizontally. 
-        self.servoHead.addval(y_speed * y_step * 2)
-        # go forward when picture to small
-        #if currentRadius < 100:
-		#    self.engine.move_all_wheels_forward(50)
-            
+        self.servoHead.addval(y_speed * y_step * 3)
+        
+    
     def moveTail(self):
         if self.moveTailForward:
             self.servoTail.addval(80)
@@ -149,8 +156,8 @@ class TrackingModule:
         sum_distance = distance_h2_sensor + distance_h3_sensor + distance_h4_sensor
         
         #Drive forward if we detect the ball in front of us and if their is floor left
-        if sum_distance / 3 > 400 and self.state_f_left is State.FREE and self.state_f_right is State.FREE:
-            self.engine.move_all_wheels_forward(20)
+        if sum_distance / 3 > 200 and self.state_f_left is State.FREE and self.state_f_right is State.FREE:
+            self.engine.move_all_wheels_forward(40)
         elif distance_f_right_sensor == -1 and distance_f_left_sensor == -1:
             self.engine.stop_all_wheels()
         else:
