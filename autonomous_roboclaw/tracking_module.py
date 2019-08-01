@@ -68,6 +68,8 @@ class TrackingModule:
         
         currentOffset = self.camera.getPosition() 
         currentSector = self.camera.getPositionOfObject(currentOffset)
+        #Get size of object
+        #currentRadius = self.camera.getRadius()
         
         if currentSector is None or currentOffset is None:  # if no object found
             if self.lastSeenX is None or self.lastSeenY is None:  # and we have never seen it
@@ -104,8 +106,10 @@ class TrackingModule:
 
         # always move the Head horizontally. 
         self.servoHead.addval(y_speed * y_step * 2)
-        
-    
+        # go forward when picture to small
+        #if currentRadius < 100:
+		#    self.engine.move_all_wheels_forward(50)
+            
     def moveTail(self):
         if self.moveTailForward:
             self.servoTail.addval(80)
