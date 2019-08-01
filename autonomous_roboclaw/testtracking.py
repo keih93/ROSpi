@@ -11,7 +11,6 @@ import cv2
 import argparse
 import numpy as np
 
-
 camera = PiCamera()
 camera.resolution = (640, 480)
 camera.framerate = 32
@@ -19,7 +18,6 @@ camera.rotation = 180
 rawCapture = PiRGBArray(camera, size=(640, 480))
 
 time.sleep(0.1)
-
 
 def callback(value):
     pass
