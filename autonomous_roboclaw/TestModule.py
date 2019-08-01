@@ -5,34 +5,35 @@ from Engine import Engine
 from Servos import Servo, Servos
 import time
 
+
 camera = PiCamera()
 engine = Engine();
 servos = Servos();
-servoFace = s.servoFace
-servoHead = s.servoHead
-servoTail = s.servoTail
-
-moveServoForward = True
+servoFace = servos.servoFace
+servoHead = servos.servoHead
+servoTail = servos.servoTail
 
 def testCamera():
     print("Testing camera: After 3 seconds your screen should show the camera output.")
     print("If the output is black, make sure that you removed the lens cap!")
+    time.sleep(2)
+    camera.rotation = 180
+    camera.start_preview()
     time.sleep(3)
-    self.camera.start_preview()
-    time.sleep(5)
-    self.camera.stop_preview()
+    camera.stop_preview()
     camera.close()
 
 def testEngine():
     print("Testing the engine")
     print("move left wheels..")
-    self.engine.move_left_wheels_forward()
-    time.sleep(2)
-    self.engine.stop_left_wheels()
+    engine.move_left_wheels_forward()
+    time.sleep(1)
+    engine.stop_left_wheels()
     print("move right wheels..")
-    self.engine.move_right_wheels_forward()
-    time.sleep(2)
-    self.engine.stop_right_wheels()
+    engine.move_right_wheels_forward()
+    time.sleep(1)
+    engine.stop_right_wheels()
+    time.sleep(0.5)
 
 def testTailServo():
     print("Testing tail servos")
@@ -47,20 +48,23 @@ def testFaceServo():
     testServo(servoFace)
 
 def testServo(servo):
+    moveServoForward = True
     now = time.time()
-    future = now + 3
+    future = now + 2
     while time.time() < future:
-        if self.moveServoForward:
-            servo.addval(80)
+        time.sleep(0.01)
+        if moveServoForward:
+            servo.addval(10)
             if servo.val >= servo.max_val:
-                self.moveServoForward = False
+                moveServoForward = False
         else:
-            servo.addval(-80)
+            servo.addval(-10)
             if servo.val <= servo.min_val:
-                self.moveServoForward = True
+                moveServoForward = True
         pass
-
-    servo.setVal(0)
+    
+    servo.reset()
+    time.sleep(0.5)
 
 def main():
     print("The robots functionality is now tested for each module...")
