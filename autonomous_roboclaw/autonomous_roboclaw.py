@@ -96,10 +96,10 @@ def run_drive():
     # Short init
     print("move test: forward")
     engine.move_all_wheels_forward(40)
-    time.sleep(1.0)
+    time.sleep(3.0)
     print("move test backwards")
     engine.move_all_wheels_backward(40)
-    time.sleep(1.0)
+    time.sleep(3.0)
     print("stop all")
     engine.stop_all_wheels()
 
@@ -118,47 +118,47 @@ def run_drive():
         if sensors.state_f_left_sensor is State.BLOCKED:
             print ("back")
             engine.move_all_wheels_backward(30)
-            time.sleep(1.0)
+            time.sleep(3.0)
             engine.turn_around_right()
-            time.sleep(1.0)
+            time.sleep(3.0)
 
         elif sensors.state_f_right_sensor is State.BLOCKED:
             print ("BACK")
             engine.move_all_wheels_backward(30)
-            time.sleep(1.0)
+            time.sleep(3.0)
             engine.turn_around_left()
-            time.sleep(1.0)
+            time.sleep(3.0)
         
         if(command == Direction.LEFT and sensors.state_h1_sensor is State.FREE and sensors.state_h2_sensor is State.FREE):
             engine.turn_around_left()
-            time.sleep(0.2)
+            time.sleep(2.2)
             engine.stop_all_wheels()
         
         elif(command == Direction.RIGHT and sensors.state_h4_sensor is State.FREE and sensors.state_h5_sensor is State.FREE):
             engine.turn_around_right()
-            time.sleep(0.2)
+            time.sleep(2.2)
             engine.stop_all_wheels()
         
         elif(command == Direction.FORWARD and sensors.state_h3_sensor == State.FREE):
             engine.move_all_wheels_forward()
-            time.sleep(0.3)
+            time.sleep(2.3)
             engine.stop_all_wheels()
             
         elif(command == Direction.STOP):
             engine.stop_all_wheels()
-            time.sleep(1.0)
+            time.sleep(3.0)
             engine.turn_around_right()
-            time.sleep(0.8)
+            time.sleep(2.8)
             engine.stop_all_wheels()
         else:
             engine.stop_all_wheels()
-            time.sleep(1.0)
+            time.sleep(3.0)
             engine.turn_around_right()
-            time.sleep(2.0)
+            time.sleep(4.0)
             engine.move_all_wheels_forward()
-            time.sleep(2.0)
+            time.sleep(4.0)
             engine.turn_around_left()
-            time.sleep(2.0)
+            time.sleep(4.0)
             engine.stop_all_wheels()
 
 
@@ -184,13 +184,13 @@ def main(args):
 
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description="RoboClaw runner script")
-    p.add_argument("--program", "-p", default="test", type=str, help="Which program to run")
+    p.add_argument("--program", "-p", default="drive", type=str, help="Which program to run")
     
     # test args
-    p.add_argument("--testtime", "-t", default=0.5, type=float, help="Time interval used in sleeps() inside the program TEST.")
+    #p.add_argument("--testtime", "-t", default=0.5, type=float, help="Time interval used in sleeps() inside the program TEST.")
     
     # track args
-    p.add_argument("--object", "-o", default="yellow", type=str, help="Object to look for in the program TRACK.")
+    #p.add_argument("--object", "-o", default="yellow", type=str, help="Object to look for in the program TRACK.")
     
     main(p.parse_args())
 
