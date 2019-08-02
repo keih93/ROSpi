@@ -18,5 +18,3 @@ if __name__ == "__main__":
         sleep(2)
         roboclaw.ForwardM2(address,0)
         sleep(2)
-    
-    

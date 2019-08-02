@@ -154,6 +154,19 @@ class CameraModule:
             cv2.waitKey(1)
         return result
     
+    def getRadius(self):
+        """
+        Get radius
+        :returns radius of object
+        """
+        ob, M = self._find_object()
+        result = None
+        if ob:
+            ((x, y), radius) = ob
+            # only proceed if the radius meets a minimum size
+            if radius > self.target.min_radius:
+                result = radius
+        return result
     
     def getDirection(self):
         """

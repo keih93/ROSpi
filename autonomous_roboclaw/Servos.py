@@ -104,7 +104,7 @@ class Servos:
     
     HEAD_UP = 175
     HEAD_FORWARD = 225
-    HEAD_DOWN = 420
+    HEAD_DOWN = 300
     
     # servo objects
     servoLeftTOF = Servo(pin=SERVO_LEFT,
